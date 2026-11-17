@@ -1,0 +1,26 @@
+:root {
+  color-scheme: dark;
+  color: #eaf5ff;
+  background: #101923;
+  font: 16px/1.65 system-ui, "Microsoft Yahei", sans-serif;
+  --muted: #aebfd0;
+  --line: #314659;
+  --accent: #b9eaff;
+  --active: #203d53;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, #0b263ddb, #19364da8),
+    url("../assets/background.jpg") center / cover no-repeat;
+  pointer-events: none;
+}
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--accent); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+time { color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }

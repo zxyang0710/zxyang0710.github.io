@@ -1,0 +1,393 @@
+[
+  {
+    "title": "计算学习理论 复习笔记",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277",
+    "published": "2026-09-28T02:16:11+08:00",
+    "date": "2026-09-28",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "本文系统介绍了机器学习中的PAC与Agnostic两种基础学习框架，对比了理想化（PAC）与现实化（Agnostic）假设下的泛化能力分析。核心内容包括：真实误差与训练误差的差异、霍夫丁不等式对误差上界的约束、版本空间与一致学习器的概念，以及在有限假设空间下PAC框架的样本复杂度定理。进一步引入不可知学习中的经验风险最小化（ERM）与一致收敛理论，推导出泛化误差界。最后，针对无限假设空间提出VC维概念，用于刻画模型复杂度，揭示其与泛化性能的关系。整体构建了从理论到实践的完整学习框架分析体系。",
+    "localUrl": "articles/166693277.html"
+  },
+  {
+    "title": "支持向量机（SVM）复习笔记",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/166494731",
+    "published": "2026-09-24T03:35:41+08:00",
+    "date": "2026-09-24",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "支持向量机 Support Vector Machines：找到一个最优的超平面，使得两类（后续可扩展为多类）数据间隔最大化两条间隔线的距离 margin=2γ=2a∥ω∥margin=2\\gamma=\\frac{2a}{\\Vert\\omega\\Vert}margin=2γ=∥ω∥2a​支持向量（Support Vectors） 即为落在隔离带上的样本点，构建出整个间隔带，其他样本点对决策边界无影响，预测时仅需存储支持向量目标：maxω,bmargin=2γ=2a∣ω∣max_{\\omega, b}mar",
+    "localUrl": "articles/166494731.html"
+  },
+  {
+    "title": "2023年CCPC哈尔滨站 补题记录",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/142688940",
+    "published": "2024-10-30T13:49:46+08:00",
+    "date": "2024-10-30",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "【代码】2023年CCPC哈尔滨站 补题记录。"
+  },
+  {
+    "title": "2024年四川省大学生程序设计竞赛 补题记录",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544",
+    "published": "2024-10-28T22:23:31+08:00",
+    "date": "2024-10-28",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "【代码】2024年四川省大学生程序设计竞赛 补题记录。",
+    "localUrl": "articles/143311544.html"
+  },
+  {
+    "title": "2022年CCPC绵阳站 补题记录",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/143278816",
+    "published": "2024-10-28T16:12:06+08:00",
+    "date": "2024-10-28",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "【代码】2022年CCPC绵阳站 补题记录。"
+  },
+  {
+    "title": "2023年CCPC秦皇岛站 补题记录",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/142934367",
+    "published": "2024-10-17T12:06:21+08:00",
+    "date": "2024-10-17",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "文章目录Problem A. 贵校是构造王国吗I（签到+思维）Problem C. 回文字符串（回文自动机+字符串哈希+二分）Problem D. 茶和咖啡（贪心+数据结构）Problem F. 质数之谜（dp）Problem G. 最大路径（签到）Problem I. 数据结构假象（线段树合并）Problem J. 维克多词典（状压+记忆化）Problem M. 生成树计数（树形dp）Problem A. 贵校是构造王国吗I（签到+思维）每一行取 [i, i] 和 [i, i + 1] 即可（最后一"
+  },
+  {
+    "title": "【数据结构】ST表 - 模板总结",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141997074",
+    "published": "2024-09-07T15:38:27+08:00",
+    "date": "2024-09-07",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "下方代码预处理区间最大值 可根据题目意思修改。"
+  },
+  {
+    "title": "【数据结构】树状数组 - 模板总结",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141996746",
+    "published": "2024-09-07T15:22:46+08:00",
+    "date": "2024-09-07",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "【代码】【数据结构】树状数组 - 模板总结。"
+  },
+  {
+    "title": "【图论】割点、割边 - 模板总结",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141994932",
+    "published": "2024-09-07T13:55:34+08:00",
+    "date": "2024-09-07",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "【代码】【图论】割点、割边 - 模板总结。"
+  },
+  {
+    "title": "【图论】缩点 - 模板总结",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141994655",
+    "published": "2024-09-07T13:35:15+08:00",
+    "date": "2024-09-07",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "【代码】【图论】缩点 - 模板总结。"
+  },
+  {
+    "title": "【图论】虚树 - 模板总结",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141962575",
+    "published": "2024-09-06T16:14:20+08:00",
+    "date": "2024-09-06",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "适用于解决一棵树中只需要用到少部分点的时候，将需要用到的点提出来单独建一棵树。"
+  },
+  {
+    "title": "【图论】网络流",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/140305202",
+    "published": "2024-09-03T09:26:36+08:00",
+    "date": "2024-09-03",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "费用流：所有最大可行流中，费用的最小 / 最大值费用：可行流中用到的边的费用乘流量之和如果一张图有最大流，一定有最小费用最大流（但是不一定能求出来）"
+  },
+  {
+    "title": "pbds库",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141607063",
+    "published": "2024-09-02T20:12:13+08:00",
+    "date": "2024-09-02",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "实测CF上需要开C++23才能通过编译。"
+  },
+  {
+    "title": "【数据结构】吉司机线段树",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141828027",
+    "published": "2024-09-02T19:30:08+08:00",
+    "date": "2024-09-02",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "【代码】【数据结构】吉司机线段树。"
+  },
+  {
+    "title": "2020年ICPC南京站 补题记录",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141815121",
+    "published": "2024-09-02T18:05:53+08:00",
+    "date": "2024-09-02",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "文章目录A - Ah, It's Yesterday Once More（构造）E - Evil Coordinate（构造）F - Fireworks（概率+三分）H - Harmonious Rectangle（打表）K - K Co-prime Permutation（签到）L - Let's Play Curling（贪心+签到）M - Monster Hunter（树形dp）A - Ah, It’s Yesterday Once More（构造）奇妙构造。。。总的来说就是斜着，下面是出题人给"
+  },
+  {
+    "title": "2023年ICPC合肥站 补题记录",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/141291686",
+    "published": "2024-08-18T22:15:03+08:00",
+    "date": "2024-08-18",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "【代码】2023年ICPC合肥站 补题记录。"
+  },
+  {
+    "title": "2023年ICPC沈阳站题解",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/139061981",
+    "published": "2024-05-20T17:05:03+08:00",
+    "date": "2024-05-20",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "因为思维和码力跟不上，补题补得太痛苦了，继续板刷去了。"
+  },
+  {
+    "title": "2023年ICPC杭州站题解",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/138249974",
+    "published": "2024-04-28T15:56:58+08:00",
+    "date": "2024-04-28",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "假设这条边的两个端点是 i j，如果 i j 不是 1 2 的话，直接先让 i 和 i - 2 连，有边再让 i 和 i - 1 连，如果还是有边就说明是星形，如果没有边就让 j 和 i - 2、i - 1 连（很容易判断就不详细说了），如果 i j 是 1 2 的话就需要单独注意一下。，看到这就很容易想到那个 n/2 是两两之间连一次吧，如果从头到尾都没碰到相连的边，说明不可能是星形（因为根本没有中间的那个点），一定是链，一旦碰到一个相连的边，就立刻停下。标记），其他就正常跑最短路，然后距离在。"
+  },
+  {
+    "title": "【图论】无向图的双连通分量",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/132889342",
+    "published": "2024-03-14T10:43:12+08:00",
+    "date": "2024-03-14",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "算法提高课笔记。"
+  },
+  {
+    "title": "【图论】树上启发式合并",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/136641184",
+    "published": "2024-03-12T15:31:52+08:00",
+    "date": "2024-03-12",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "在树链剖分时我们把树中结点最多的子树根结点叫做重子结点，也就是说，在树上启发式合并的过程中，我们需要先计算所有轻子结点的信息（每计算一个轻子结点之后都要删除这个结点对当前答案的影响），最后计算重子结点的信息（保留重子结点对当前答案的影响），然后再计算前面的轻子结点（这一次计算要保留结点对当前答案的影响）这样的树中，我们首先计算2子树的信息，然后计算3子树的信息的时候我们又要把2子树清空，每计算一个新的子树都要把之前计算过的信息清空，根本存不下来信息啊。换句话说，我们保留哪一个子树的信息不被删除呢？"
+  },
+  {
+    "title": "【动态规划】单调栈 / 单调队列优化dp",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/136649574",
+    "published": "2024-03-12T13:29:55+08:00",
+    "date": "2024-03-12",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "在dp中的具体使用方法就是把前面计算过的dp值存进数据结构中进行维护。"
+  },
+  {
+    "title": "【图论】树链剖分",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/136633257",
+    "published": "2024-03-11T20:59:28+08:00",
+    "date": "2024-03-11",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "这里做的是一个类似LCA的操作，如果两个结点不在同一条链上，就让深度更大的结点往上跳（每次只能跳一个结点，避免两个结点一起跳导致擦肩而过）直到跳到同一条链上，因为同一条链上的点 dfs 序是相邻的，所以可以直接在这条链上用数据结构计算权值和（下面的代码用的是线段树）思路就是，如果两个点不在一条重链上，那就不断让深度大的结点往上跳，直到跳到同一条链上，那么深度较小的点就是LCA。接下来需要实现树链剖分，也就是把每个结点划到一条链里，这通常是由两边 dfs 来实现的。首先，树链剖分是什么呢？"
+  },
+  {
+    "title": "【图论】2-SAT",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/136137938",
+    "published": "2024-02-17T16:04:32+08:00",
+    "date": "2024-02-17",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "给出一个类似于这样的式子，让你找出满足条件的一个解，这样的问题就是SAT问题，因为每一个括号内都有三个被限制的变量，所以这叫做3-SAT问题（是因为括号内的变量数有3个才叫3-SAT，不是因为abc才叫3-SAT）所以2-SAT也很好理解，就叫做 2-SAT 问题可以证明 3-SAT 及以上的问题只能用暴力枚举解决（我也不知道怎么证明），所以我们只讨论2-SAT问题。"
+  },
+  {
+    "title": "【图论】基环树",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/136026312",
+    "published": "2024-02-04T15:06:25+08:00",
+    "date": "2024-02-04",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "基环树其实并不是树，是指有n个点n条边的图，我们知道n个点n-1条边的连通图是树，再加一条边就会形成一个环，所以基环树中一定有一个环，长下面这样：由基环树可以引申出和基环内向树如下，特点是每个点的出度为1基环内向树如下，特点是每个点的入度为1下面放点题，做到相关题目随时更新。"
+  },
+  {
+    "title": "【图论】网络流",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/135966463",
+    "published": "2024-02-01T11:57:58+08:00",
+    "date": "2024-02-01",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "网络流目前只整理模板，学习的话这篇博客可能不太适合下文建图方式都基于链式前向星，请注意，cnt。"
+  },
+  {
+    "title": "【图论】拓扑排序",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/135872651",
+    "published": "2024-01-26T18:47:09+08:00",
+    "date": "2024-01-26",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "在AOE网中，想要完成一项活动，必须要先完成在该活动前面的所有活动，例如下图中，想要完成活动e，必须要先完成活动abcd，完成活动a和c所需时间为3 + 2 = 5，完成活动b和d所需时间为5 + 4 = 9，二者取大，因此任务e的最早开始时间为9。由此我们可以知道，整个工程从开始到结束所需要花费的时间是起始点到终止点的最大路径长度（因为这样才可以保证在终止点前的所有任务都完成了），这个有最大路径长度的路径就是关键路径，关键路径上的活动就叫做关键活动。"
+  },
+  {
+    "title": "【数据结构】Splay树 + 文艺平衡树",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/135744504",
+    "published": "2024-01-22T14:31:03+08:00",
+    "date": "2024-01-22",
+    "category": "CSDN",
+    "tags": [],
+    "summary": "就是一个长这样的树，树中每个结点都有一个父结点（除了根结点没有父结点）和最多两个子结点，每个结点的左儿子一定比它小，右儿子一定比它大。这棵树的先序遍历很容易知道就是：1 2 3 4 5 6 7 （根左右）我们还可以从另一个角度理解先序遍历：把整棵树映射到 x 轴上，也就是把它压扁也就是这样：先序遍历从左到右读出来就可以了。"
+  },
+  {
+    "title": "【图论】树的直径",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/135707790",
+    "published": "2024-01-19T22:07:04+08:00",
+    "date": "2024-01-19",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "树的直径即为一棵树中距离最远的两点之间的路径。",
+    "localUrl": "articles/135707790.html"
+  },
+  {
+    "title": "【图论】判环问题",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/133500922",
+    "published": "2023-10-02T22:20:19+08:00",
+    "date": "2023-10-02",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "（未更新完、做到相关题再更新相关部分。",
+    "localUrl": "articles/133500922.html"
+  },
+  {
+    "title": "【图论】有向图的强连通分量",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/132840212",
+    "published": "2023-09-12T23:09:59+08:00",
+    "date": "2023-09-12",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "对于一个有向图，分量中任意两点u，v，必然可以从u走到v，且从v走到u，这样的分量叫做连通分量如果一个连通分量加上任意一个点都不是连通分量了，就把它叫做。"
+  },
+  {
+    "title": "【图论】SPFA求负环",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/132791585",
+    "published": "2023-09-10T17:06:46+08:00",
+    "date": "2023-09-10",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "算法提高课笔记。"
+  },
+  {
+    "title": "【图论】最小生成树",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/132782430",
+    "published": "2023-09-10T11:55:52+08:00",
+    "date": "2023-09-10",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "（算法基础+提高课笔记。"
+  },
+  {
+    "title": "【图论】Floyd",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/132782369",
+    "published": "2023-09-09T21:19:24+08:00",
+    "date": "2023-09-09",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "算法提高课笔记）"
+  },
+  {
+    "title": "【图论】单源最短路",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/132138719",
+    "published": "2023-08-07T15:59:06+08:00",
+    "date": "2023-08-07",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "算法提高课笔记。"
+  },
+  {
+    "title": "【图论】二分图",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/131861131",
+    "published": "2023-07-21T22:15:36+08:00",
+    "date": "2023-07-21",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "二分图，即可以将图中的所有顶点分层两个点集，每个点集内部没有边。"
+  },
+  {
+    "title": "【图论】最短路算法",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/131861117",
+    "published": "2023-07-21T22:14:28+08:00",
+    "date": "2023-07-21",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "（2）遍历 k 次，第 i 次表示这一轮的最短路最多经过 i 条边：每轮先复制上一轮的dist（防止本轮前面的dist更新对后面的更新有影响），然后遍历所有边，更新dist为最小值。（1）初始化距离数组dist[N]，将其所有值赋为0x3f，并将起点1的dist初始化为0，存入优先队列heap中。（1）初始化距离数组dist[N]，将其所有值赋为0x3f，并将起点1的dist初始化为0。（3）每轮取出队头，遍历与队头相连的所有点，更新这些点的dist，并将不在队中的点入队。（4）重复（3），直到队空。"
+  },
+  {
+    "title": "【图论】 最近公共祖先LCA",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/131843502",
+    "published": "2023-07-21T16:44:29+08:00",
+    "date": "2023-07-21",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "什么是最近公共祖先？在一棵树中（也就是有向无环图中），从根结点遍历到每个结点，路径上所经过的所有结点都叫做该结点的祖先结点两个结点的祖先结点中重复的部分叫做公共祖先公共祖先中层数最大的一个点叫做最近公共祖先（LCA）"
+  },
+  {
+    "title": "【图论】图的存储与搜索",
+    "url": "https://blog.csdn.net/dhxbshbdjzxy/article/details/131000852",
+    "published": "2023-06-02T22:31:01+08:00",
+    "date": "2023-06-02",
+    "category": "CSDN",
+    "tags": [
+      "图论"
+    ],
+    "summary": "首先，树是一种特殊的图，因此树的存储类似，这里只记录图的存储。其次，无向图又是一种特殊的有向图。无向图中的 a—b 相当于有向图中的 a->b b->a，因此这里只记录有向图的存储。"
+  }
+]

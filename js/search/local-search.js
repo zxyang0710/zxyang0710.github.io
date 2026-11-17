@@ -188,7 +188,8 @@ class LocalSearch {
         this.datas = this.datas.filter(data => data.title).map(data => {
           data.title = data.title.trim()
           data.content = data.content ? data.content.trim().replace(/<[^>]+>/g, '') : ''
-          data.url = decodeURIComponent(data.url).replace(/\/{2,}/g, '/')
+          const indexUrl = new URL(this.path, document.baseURI)
+          data.url = new URL(data.url.replace(/^\//, ''), indexUrl).href
           return data
         })
         // Remove loading animation

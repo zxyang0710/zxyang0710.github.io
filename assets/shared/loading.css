@@ -1,0 +1,30 @@
+.fish-progress {
+  position: fixed;
+  z-index: 10000;
+  inset: 0 0 auto;
+  height: 4px;
+  background: #ccecf4;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity .2s ease;
+}
+.fish-progress__fill {
+  position: relative;
+  width: 9%;
+  height: 100%;
+  border-radius: 0 999px 999px 0;
+  background: linear-gradient(90deg, #68b7d2, #2f82ad);
+  transition: width .45s ease-out;
+}
+.fish-progress__fish {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  transform: scaleX(-1);
+  font: 19px/1.2 system-ui, sans-serif;
+  text-shadow: 0 1px 5px #f0fbff;
+}
+.fish-progress.is-finished { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .fish-progress, .fish-progress__fill { transition: none; }
+}

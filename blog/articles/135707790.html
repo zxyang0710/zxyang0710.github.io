@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>【图论】树的直径 · zxyang</title>
+<link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/article.css">
+
+</head>
+<body>
+<main class="reading">
+<a href="../">← 返回 Blog</a>
+<h1>【图论】树的直径</h1>
+<time datetime="2024-01-19T22:07:04+08:00">2024-01-19</time>
+<div class="prose">
+
+<p>树的直径即为一棵树中距离最远的两点之间的路径</p>
+<h2><a></a>方法一：DFS</h2>
+<p>先以任意一点为起点跑一遍dfs，记录离起点距离最远的点p（这个点一定是直径的一个端点，感性理解一下不证明了），然后再以最远点再跑一遍dfs，记录此时距离最远的点q，那么pq就是该树的直接</p>
+<p><strong><mark>树中有负权边时不可以用这个方法</mark></strong></p>
+<pre><code><span>const</span> <span>int</span> N <span>=</span> <span>10000</span> <span>+</span> <span>10</span><span>;</span>
+
+<span>int</span> n<span>,</span> c<span>,</span> d<span>[</span>N<span>]</span><span>;</span>
+vector<span>&lt;</span><span>int</span><span>&gt;</span> g<span>[</span>N<span>]</span><span>;</span>
+
+<span>void</span> <span>dfs</span><span>(</span><span>int</span> u<span>,</span> <span>int</span> fa<span>)</span>
+<span>{<!-- --></span>
+    <span>for</span> <span>(</span><span>int</span> v <span>:</span> E<span>[</span>u<span>]</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>v <span>==</span> fa<span>)</span> <span>continue</span><span>;</span>
+        d<span>[</span>v<span>]</span> <span>=</span> d<span>[</span>u<span>]</span> <span>+</span> <span>1</span><span>;</span> <span>// 如边有权值，把1换成权值即可</span>
+        <span>if</span> <span>(</span>d<span>[</span>v<span>]</span> <span>&gt;</span> d<span>[</span>c<span>]</span><span>)</span> c <span>=</span> v<span>;</span> <span>// 更新最大距离的点</span>
+        <span>dfs</span><span>(</span>v<span>,</span> u<span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+
+<span>int</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    cin <span>&gt;&gt;</span> n<span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;</span> n<span>;</span> i<span>++</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> u<span>,</span> v<span>;</span>
+        <span>scanf</span><span>(</span><span>"%d %d"</span><span>,</span> <span>&amp;</span>u<span>,</span> <span>&amp;</span>v<span>)</span><span>;</span>
+        g<span>[</span>u<span>]</span><span>.</span><span>push_back</span><span>(</span>v<span>)</span><span>,</span> g<span>[</span>v<span>]</span><span>.</span><span>push_back</span><span>(</span>u<span>)</span><span>;</span>
+    <span>}</span>
+    <span>dfs</span><span>(</span><span>1</span><span>,</span> <span>0</span><span>)</span><span>;</span> <span>// 第一遍dfs</span>
+    <span>int</span> p <span>=</span> c<span>;</span> <span>// 一个端点</span>
+    d<span>[</span>c<span>]</span> <span>=</span> <span>0</span><span>;</span>
+    <span>dfs</span><span>(</span>c<span>,</span> <span>0</span><span>)</span><span>;</span> <span>// 第二遍dfs</span>
+    <span>int</span> q <span>=</span> c<span>;</span> <span>// 另一个端点</span>
+    cout <span>&lt;&lt;</span> d<span>[</span>c<span>]</span><span>;</span>
+    <span>return</span> <span>0</span><span>;</span>
+<span>}</span>
+</code></pre>
+<h2><a></a>方法二：树形dp</h2>
+<p><code>dp[u]</code>为以u为根的子树中离u最远的点的路径长度<br/>
+转移方程（v为u的子结点）：<code>dp[u] = max(dp[u], dp[v] + w(u, v))</code><br/>
+两条经过根结点的最长路径即为该子树中的直径<br/>
+转移方程：<code>zj = max(zj, dp[u] + dp[v] + w(u, v))</code></p>
+<pre><code><span>const</span> <span>int</span> N <span>=</span> <span>10000</span> <span>+</span> <span>10</span><span>;</span>
+
+<span>int</span> n<span>,</span> zj <span>=</span> <span>0</span><span>;</span>
+<span>int</span> dp<span>[</span>N<span>]</span><span>;</span>
+vector<span>&lt;</span><span>int</span><span>&gt;</span> g<span>[</span>N<span>]</span><span>;</span>
+
+<span>void</span> <span>dfs</span><span>(</span><span>int</span> u<span>,</span> <span>int</span> fa<span>)</span>
+<span>{<!-- --></span>
+    <span>for</span> <span>(</span><span>int</span> v <span>:</span> E<span>[</span>u<span>]</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>v <span>==</span> fa<span>)</span> <span>continue</span><span>;</span>
+        <span>dfs</span><span>(</span>v<span>,</span> u<span>)</span><span>;</span>
+        zj <span>=</span> <span>max</span><span>(</span>zj<span>,</span> dp<span>[</span>u<span>]</span> <span>+</span> dp<span>[</span>v<span>]</span> <span>+</span> <span>1</span><span>)</span><span>;</span> <span>// 如为有权边，把1换成权值即可</span>
+        dp<span>[</span>u<span>]</span> <span>=</span> <span>max</span><span>(</span>dp<span>[</span>u<span>]</span><span>,</span> dp<span>[</span>v<span>]</span> <span>+</span> <span>1</span><span>)</span><span>;</span> <span>// 如为有权边，把1换成权值即可</span>
+    <span>}</span>
+<span>}</span>
+
+<span>int</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    cin <span>&gt;&gt;</span> n<span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;</span> n<span>;</span> i<span>++</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> u<span>,</span> v<span>;</span>
+        cin <span>&gt;&gt;</span> u <span>&gt;&gt;</span> v<span>;</span>
+        g<span>[</span>u<span>]</span><span>.</span><span>push_back</span><span>(</span>v<span>)</span><span>,</span> g<span>[</span>v<span>]</span><span>.</span><span>push_back</span><span>(</span>u<span>)</span><span>;</span>
+    <span>}</span>
+    <span>dfs</span><span>(</span><span>1</span><span>,</span> <span>0</span><span>)</span><span>;</span>
+    cout <span>&lt;&lt;</span> zj <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+    <span>return</span> <span>0</span><span>;</span>
+<span>}</span>
+</code></pre>
+</div>
+</main>
+</body>
+</html>

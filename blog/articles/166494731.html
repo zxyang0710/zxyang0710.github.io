@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>支持向量机（SVM）复习笔记 · zxyang</title>
+<link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/article.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script defer src="../render-math.js"></script>
+</head>
+<body>
+<main class="reading">
+<a href="../">← 返回 Blog</a>
+<h1>支持向量机（SVM）复习笔记</h1>
+<time datetime="2026-09-24T03:35:41+08:00">2026-09-24</time>
+<div class="prose">
+
+<h3><a></a>基础概念</h3>
+<p><strong>支持向量机 Support Vector Machines</strong>：找到一个最优的超平面，使得两类（后续可扩展为多类）数据间隔最大化</p>
+<p><img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/c4ce01759eb04e76b3fce0a0c83c9fbf.png"><br/>
+两条间隔线的距离 <span><span data-tex="margin=2γ=2a∥ω∥margin=2\gamma=\frac{2a}{\Vert\omega\Vert}" data-display="false">margin=2γ=2a∥ω∥margin=2\gamma=\frac{2a}{\Vert\omega\Vert}</span></span></img></p>
+<blockquote>
+<p><strong>前提一：权重向量 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 垂直于分类超平面</strong><br/>
+在分类平面中任取两个点 <span><span data-tex="x1x_1" data-display="false">x1x_1</span></span> 和 <span><span data-tex="x2x_2" data-display="false">x2x_2</span></span><br/>
+<span><span><div data-tex="ωx1+b=0ωx2+b=0 \left\{
+\begin{aligned}
+\omega x_1+b=0 \\
+\omega x_2+b=0
+\end{aligned}
+\right." data-display="true">ωx1+b=0ωx2+b=0 \left\{
+\begin{aligned}
+\omega x_1+b=0 \\
+\omega x_2+b=0
+\end{aligned}
+\right.</div></span></span><br/>
+两式相减得到：<span><span data-tex="ω(x1−x2)=0\omega(x_1-x_2)=0" data-display="false">ω(x1−x2)=0\omega(x_1-x_2)=0</span></span><br/>
+其中 <span><span data-tex="x1−x2x_1-x_2" data-display="false">x1−x2x_1-x_2</span></span> 与分类平面平行，所以 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 与分类平面垂直</p>
+</blockquote>
+<blockquote>
+<p><strong>前提二：利用支持向量构建向量关系</strong><br/>
+从 <span><span data-tex="x−x^-" data-display="false">x−x^-</span></span> 到 <span><span data-tex="x+x^+" data-display="false">x+x^+</span></span> 的向量 <span><span data-tex="x+−x−x^+-x^-" data-display="false">x+−x−x^+-x^-</span></span>，其与 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 在同方向上<br/>
+即：<span><span data-tex="x+=x−+2γω∣ω∣x^+=x^-+2\gamma\frac{\omega}{\vert\omega\vert}" data-display="false">x+=x−+2γω∣ω∣x^+=x^-+2\gamma\frac{\omega}{\vert\omega\vert}</span></span><br/>
+其中 <span><span data-tex="ω∣ω∣\frac{\omega}{\vert\omega\vert}" data-display="false">ω∣ω∣\frac{\omega}{\vert\omega\vert}</span></span> 是单位向量<br/>
+两边同乘 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 后加 <span><span data-tex="bb" data-display="false">bb</span></span>，得到： <span><span data-tex="ωx++b=ωx−+b+2γ∣ω∣2∣ω∣\omega x^++b=\omega x^-+b+2\gamma\frac{\vert\omega\vert^2}{\vert\omega\vert}" data-display="false">ωx++b=ωx−+b+2γ∣ω∣2∣ω∣\omega x^++b=\omega x^-+b+2\gamma\frac{\vert\omega\vert^2}{\vert\omega\vert}</span></span><br/>
+代入间隔线：<span><span data-tex="a=−a+2γωa=-a+2\gamma\omega" data-display="false">a=−a+2γωa=-a+2\gamma\omega</span></span><br/>
+即：<span><span data-tex="γ=a∣ω∣\gamma=\frac{a}{\vert\omega\vert}" data-display="false">γ=a∣ω∣\gamma=\frac{a}{\vert\omega\vert}</span></span></p>
+</blockquote>
+<p><strong>支持向量（Support Vectors）</strong> 即为落在隔离带上的样本点，构建出整个间隔带，其他样本点对决策边界无影响，预测时仅需存储支持向量</p>
+<hr/>
+<p><strong>目标：<span><span data-tex="maxω,bmargin=2γ=2a∣ω∣max_{\omega, b}margin=2\gamma=\frac{2a}{\vert\omega\vert}" data-display="false">maxω,bmargin=2γ=2a∣ω∣max_{\omega, b}margin=2\gamma=\frac{2a}{\vert\omega\vert}</span></span></strong><br/>
+<strong>约束：<span><span data-tex="(ωxj+b)yj⩾a(\omega x_j+b)y_j\geqslant a" data-display="false">(ωxj+b)yj⩾a(\omega x_j+b)y_j\geqslant a</span></span></strong></p>
+<blockquote>
+<p>这个约束表示所有样本都必须被正确分类，且要位于隔离带之外</p>
+</blockquote>
+<p>为了方便计算，令 <span><span data-tex="a=1a=1" data-display="false">a=1a=1</span></span>，总间隔 <span><span data-tex="2γ=2∣ω∣2\gamma=\frac{2}{\vert\omega\vert}" data-display="false">2γ=2∣ω∣2\gamma=\frac{2}{\vert\omega\vert}</span></span></p>
+<p>最大化 <span><span data-tex="2∣ω∣\frac{2}{\vert\omega\vert}" data-display="false">2∣ω∣\frac{2}{\vert\omega\vert}</span></span> 即最小化 <span><span data-tex="∣ω∣\vert\omega\vert" data-display="false">∣ω∣\vert\omega\vert</span></span>，等价于最小化 <span><span data-tex="ω2\omega^2" data-display="false">ω2\omega^2</span></span></p>
+<hr/>
+<p>如果无法实现完美分类呢？</p>
+<p><img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/1be214581d4345dfa8b22668f6f793fa.png"/></p>
+<p><strong>软间隔（Soft Margin）</strong></p>
+<p>核心思想：允许犯错</p>
+<p><strong>目标：<span><span data-tex="minω,b(ω2+C∑jξj)min_{\omega, b}(\omega^2+C\sum_{j}{\xi_j})" data-display="false">minω,b(ω2+C∑jξj)min_{\omega, b}(\omega^2+C\sum_{j}{\xi_j})</span></span></strong></p>
+<p><strong>约束：</strong></p>
+<ul><li><strong><span><span data-tex="(ωxj+b)yj⩾1−ξj(\omega x_j+b)y_j\geqslant 1-\xi_j" data-display="false">(ωxj+b)yj⩾1−ξj(\omega x_j+b)y_j\geqslant 1-\xi_j</span></span></strong></li><li><strong><span><span data-tex="ξj⩾0\xi_j\geqslant0" data-display="false">ξj⩾0\xi_j\geqslant0</span></span></strong></li></ul>
+<p>其中 <span><span data-tex="C∑jξjC\sum_{j}{\xi_j}" data-display="false">C∑jξjC\sum_{j}{\xi_j}</span></span> 是惩罚项，理解为在最大化间隔的同时，犯错越少越好<br/>
+<span><span data-tex="CC" data-display="false">CC</span></span> 越大惩罚越重，间隔越小，越容易过拟合<br/>
+<span><span data-tex="CC" data-display="false">CC</span></span> 越小惩罚越轻，间隔越大，越容易欠拟合</p>
+<p><span><span data-tex="ξj\xi_j" data-display="false">ξj\xi_j</span></span> 为<strong>松弛变量（slack variable）</strong>，表示一个样本点违反间隔边界的程度</p>
+<ul><li>情况一：完美分类，点在隔离带外，<span><span data-tex="ξj=0\xi_j=0" data-display="false">ξj=0\xi_j=0</span></span></li><li>情况二：点在隔离带内，但是分类正确，<span><span data-tex="0&lt;ξj&lt;10&lt;\xi_j&lt;1" data-display="false">0&lt;ξj&lt;10&lt;\xi_j&lt;1</span></span></li><li>情况三：彻底分类错误，<span><span data-tex="ξj&gt;1\xi_j&gt;1" data-display="false">ξj&gt;1\xi_j&gt;1</span></span></li></ul>
+<p>松弛变量 <span><span data-tex="ξj\xi_j" data-display="false">ξj\xi_j</span></span> 本质上就是模型预测值 <span><span data-tex="f(xj)f(x_j)" data-display="false">f(xj)f(x_j)</span></span> 与真实标签 <span><span data-tex="yjy_j" data-display="false">yjy_j</span></span> 之间的损失<br/>
+因为 <span><span data-tex="f(xj)=sgn(ωxj+b)f(x_j)=sgn(\omega x_j+b)" data-display="false">f(xj)=sgn(ωxj+b)f(x_j)=sgn(\omega x_j+b)</span></span><br/>
+所以 <span><span data-tex="ξj=loss(f(xj),yj)=max⁡(0,1−(ωxj+b)yj)\xi_j=loss(f(x_j), y_j)=\max(0, 1-(\omega x_j+b)y_j)" data-display="false">ξj=loss(f(xj),yj)=max⁡(0,1−(ωxj+b)yj)\xi_j=loss(f(x_j), y_j)=\max(0, 1-(\omega x_j+b)y_j)</span></span><br/>
+称为 <strong>合页损失（Hinge Loss）</strong><br/>
+<img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/bc76a094a12d44abb57c245b6a50139e.png"><br/>
+令 <span><span data-tex="z=(ωxj+b)yjz=(\omega x_j+b)y_j" data-display="false">z=(ωxj+b)yjz=(\omega x_j+b)y_j</span></span>:</img></p>
+<ul><li><span><span data-tex="z&gt;1z&gt;1" data-display="false">z&gt;1z&gt;1</span></span> 时，完全正确分类，惩罚为 0</li><li><span><span data-tex="0&lt;z&lt;10&lt;z&lt;1" data-display="false">0&lt;z&lt;10&lt;z&lt;1</span></span> 时，正确分类但越过分割线，给一个线性的惩罚</li><li><span><span data-tex="z&lt;0z&lt;0" data-display="false">z&lt;0z&lt;0</span></span> 时，彻底分类错误，且越偏离惩罚越重</li></ul>
+<blockquote>
+<p><strong>关于SVM和逻辑回归的个人理解</strong><br/>
+逻辑回归就是输入经过 <span><span data-tex="ωx+b\omega x+b" data-display="false">ωx+b\omega x+b</span></span> 后再经过 <span><span data-tex="sigmoidsigmoid" data-display="false">sigmoidsigmoid</span></span> 函数，根据得到的结果判断属于正还是反<br/>
+svm就是经过 <span><span data-tex="ωx+b\omega x+b" data-display="false">ωx+b\omega x+b</span></span> 后判断在分类超平面的哪一侧，并不能知道概率</p>
+</blockquote>
+<hr/>
+<p><strong>二分类 -&gt; 多分类</strong></p>
+<blockquote>
+<p><strong>OvA：One against all</strong> 独立训练多个SVM分类器<br/>
+<span><span data-tex="y=argmax⁡k(ωkx+bk)y=arg \max_k(\omega_kx+b_k)" data-display="false">y=argmax⁡k(ωkx+bk)y=arg \max_k(\omega_kx+b_k)</span></span> 越大，说明在这个方向跑得越远<br/>
+但因为每个分类器的打分尺度不同，直接按 max 是不合理的</p>
+</blockquote>
+<p><strong>多分类SVM</strong></p>
+<p>核心思想：同时学习</p>
+<p><strong>目标：<span><span data-tex="min⁡ω,b(∑yω(y)ω(y))\min_{\omega,b}{(\sum_y{\omega^{(y)}\omega^{(y)}})}" data-display="false">min⁡ω,b(∑yω(y)ω(y))\min_{\omega,b}{(\sum_y{\omega^{(y)}\omega^{(y)}})}</span></span></strong><br/>
+对所有权重向量的平方和最小化，相当于全局最大化各分类的间隔</p>
+<p><strong>约束：<span><span data-tex="ω(yj)xj+b(yj)⩾ω(y′)xj+b(y′)+1\omega^{(y_j)}x_j+b^{(y_j)}\geqslant \omega^{(y&#x27;)}x_j+b^{(y&#x27;)}+1" data-display="false">ω(yj)xj+b(yj)⩾ω(y′)xj+b(y′)+1\omega^{(y_j)}x_j+b^{(y_j)}\geqslant \omega^{(y&#x27;)}x_j+b^{(y&#x27;)}+1</span></span></strong><br/>
+可以理解为，正确类得分至少比错误类得分大1</p>
+<p>类比上面的软间隔SVM，将多分类SVM扩展为 <strong>软间隔多分类SVM</strong>：</p>
+<p><strong>目标：<span><span data-tex="min⁡ω,b(∑yω(y)ω(y)+C∑j∑y≠yjξj(y))\min_{\omega,b}{(\sum_y{\omega^{(y)}\omega^{(y)}}+C\sum_j\sum_{y\neq y_j}\xi_j^{(y)})}" data-display="false">min⁡ω,b(∑yω(y)ω(y)+C∑j∑y≠yjξj(y))\min_{\omega,b}{(\sum_y{\omega^{(y)}\omega^{(y)}}+C\sum_j\sum_{y\neq y_j}\xi_j^{(y)})}</span></span></strong><br/>
+对于每个错误类别 <span><span data-tex="yy" data-display="false">yy</span></span>，都有专属松弛变量 <span><span data-tex="ξj\xi_j" data-display="false">ξj\xi_j</span></span></p>
+<p><strong>约束：</strong></p>
+<ul><li><span><span data-tex="ω(yj)xj+b(yj)⩾ω(y′)xj+b(y′)+1−ξj(y)\omega^{(y_j)}x_j+b^{(y_j)}\geqslant \omega^{(y&#x27;)}x_j+b^{(y&#x27;)}+1-\xi_j^{(y)}" data-display="false">ω(yj)xj+b(yj)⩾ω(y′)xj+b(y′)+1−ξj(y)\omega^{(y_j)}x_j+b^{(y_j)}\geqslant \omega^{(y&#x27;)}x_j+b^{(y&#x27;)}+1-\xi_j^{(y)}</span></span></li><li><span><span data-tex="ξj(y)⩾0\xi_j^{(y)}\geqslant0" data-display="false">ξj(y)⩾0\xi_j^{(y)}\geqslant0</span></span></li></ul>
+<p>对于不同的 <span><span data-tex="ξj\xi_j" data-display="false">ξj\xi_j</span></span>：</p>
+<ul><li><span><span data-tex="ξj=0\xi_j=0" data-display="false">ξj=0\xi_j=0</span></span> 时：完美分类，正确比错误至少高1</li><li><span><span data-tex="ξj&gt;0\xi_j&gt;0" data-display="false">ξj&gt;0\xi_j&gt;0</span></span> 时，错误类分太高了需要惩罚</li></ul>
+<p>联合优化解决了OvA方式的缺陷</p>
+<hr/>
+<h3><a></a>优化过程</h3>
+<blockquote>
+<p><strong>前置知识：拉格朗日乘子法</strong><br/>
+目的是将带约束的优化问题转化为无约束的优化问题<br/>
+<br/>
+原始：<br/>
+<span><span data-tex="min⁡ωf(ω)\min_{\omega}{f(\omega)}" data-display="false">min⁡ωf(ω)\min_{\omega}{f(\omega)}</span></span><br/>
+<span><span data-tex="gi(ω)⩽0i=1,...,kg_i(\omega)\leqslant0\quad i=1,...,k" data-display="false">gi(ω)⩽0i=1,...,kg_i(\omega)\leqslant0\quad i=1,...,k</span></span><br/>
+<span><span data-tex="hi(ω)=0i=1,...,lh_i(\omega)=0\quad i=1,...,l" data-display="false">hi(ω)=0i=1,...,lh_i(\omega)=0\quad i=1,...,l</span></span><br/>
+<br/>
+<strong>拉格朗日函数</strong>：<br/>
+<span><span data-tex="L(ω,α,β)=f(ω)+∑i=1kαigi(ω)+∑i=1lβihi(ω)\mathcal{L}(\omega,\alpha,\beta)=f(\omega)+\sum_{i=1}^{k}\alpha_i g_i(\omega)+\sum_{i=1}^{l}\beta_i h_i(\omega)" data-display="false">L(ω,α,β)=f(ω)+∑i=1kαigi(ω)+∑i=1lβihi(ω)\mathcal{L}(\omega,\alpha,\beta)=f(\omega)+\sum_{i=1}^{k}\alpha_i g_i(\omega)+\sum_{i=1}^{l}\beta_i h_i(\omega)</span></span><br/>
+其中 <span><span data-tex="αi⩾0\alpha_i\geqslant 0" data-display="false">αi⩾0\alpha_i\geqslant 0</span></span>，这样如果满足不等式约束 <span><span data-tex="gi(ω)⩽0g_i(\omega)\leqslant0" data-display="false">gi(ω)⩽0g_i(\omega)\leqslant0</span></span>，<span><span data-tex="αigi(ω)\alpha_i g_i(\omega)" data-display="false">αigi(ω)\alpha_i g_i(\omega)</span></span> 必定是负数（或者0），让 <span><span data-tex="L\mathcal{L}" data-display="false">L\mathcal{L}</span></span> 变小或不变；如果不满足不等式约束 <span><span data-tex="gi(ω)⩽0g_i(\omega)\leqslant0" data-display="false">gi(ω)⩽0g_i(\omega)\leqslant0</span></span>，<span><span data-tex="αi\alpha_i" data-display="false">αi\alpha_i</span></span> 可以变得无穷大，使 <span><span data-tex="αigi(ω)\alpha_i g_i(\omega)" data-display="false">αigi(ω)\alpha_i g_i(\omega)</span></span> 变为正无穷，让 <span><span data-tex="L\mathcal{L}" data-display="false">L\mathcal{L}</span></span> 变大<br/>
+其中 <span><span data-tex="βi\beta_i" data-display="false">βi\beta_i</span></span> 不限制正负，因为如果满足等式约束，<span><span data-tex="βihi(ω)\beta_i h_i(\omega)" data-display="false">βihi(ω)\beta_i h_i(\omega)</span></span> 一定为 <span><span data-tex="00" data-display="false">00</span></span>；一旦不满足，让 <span><span data-tex="β\beta" data-display="false">β\beta</span></span> 和 <span><span data-tex="hh" data-display="false">hh</span></span> 同号即可实现惩罚<br/>
+<br/>
+引理：<span><span data-tex="f(ω)如果ω满足最初限制∞如果ω不满足最初限制\max_{\alpha,\beta,\alpha_i\geqslant 0}{\mathcal{L}(\omega,\alpha,\beta)}=\left\{
+\begin{aligned}
+f(\omega)\quad 如果 \omega 满足最初限制 \\
+\infty\quad 如果 \omega 不满足最初限制
+\end{aligned}
+\right." data-display="false">f(ω)如果ω满足最初限制∞如果ω不满足最初限制\max_{\alpha,\beta,\alpha_i\geqslant 0}{\mathcal{L}(\omega,\alpha,\beta)}=\left\{
+\begin{aligned}
+f(\omega)\quad 如果 \omega 满足最初限制 \\
+\infty\quad 如果 \omega 不满足最初限制
+\end{aligned}
+\right.</span></span></p>
+<ul><li>情况一：违反约束
+<ul><li>违反不等式约束：只需让 <span><span data-tex="αi→+∞\alpha_i\rightarrow+\infty" data-display="false">αi→+∞\alpha_i\rightarrow+\infty</span></span>，那么 <span><span data-tex="∑i=1kαigi(ω)→+∞\sum_{i=1}^{k}\alpha_i g_i(\omega)\rightarrow+\infty" data-display="false">∑i=1kαigi(ω)→+∞\sum_{i=1}^{k}\alpha_i g_i(\omega)\rightarrow+\infty</span></span>，即 <span><span data-tex="L→+∞\mathcal{L}\rightarrow+\infty" data-display="false">L→+∞\mathcal{L}\rightarrow+\infty</span></span></li><li>违反等式约束：只需让 <span><span data-tex="β→+∞/−∞\beta\rightarrow+\infty/-\infty" data-display="false">β→+∞/−∞\beta\rightarrow+\infty/-\infty</span></span>，使 <span><span data-tex="∑i=1lβihi(ω)→+∞\sum_{i=1}^{l}\beta_i h_i(\omega)\rightarrow+\infty" data-display="false">∑i=1lβihi(ω)→+∞\sum_{i=1}^{l}\beta_i h_i(\omega)\rightarrow+\infty</span></span>，即 <span><span data-tex="L→+∞\mathcal{L}\rightarrow+\infty" data-display="false">L→+∞\mathcal{L}\rightarrow+\infty</span></span></li></ul>
+</li><li>情况二：满足约束
+<ul><li><span><span data-tex="αi=0→∑i=1kαigi(ω)=0\alpha_i=0\rightarrow \sum_{i=1}^{k}\alpha_i g_i(\omega)=0" data-display="false">αi=0→∑i=1kαigi(ω)=0\alpha_i=0\rightarrow \sum_{i=1}^{k}\alpha_i g_i(\omega)=0</span></span></li><li><span><span data-tex="hi(ω)=0→∑i=1lβihi(ω)=0h_i(\omega)=0\rightarrow \sum_{i=1}^{l}\beta_i h_i(\omega)=0" data-display="false">hi(ω)=0→∑i=1lβihi(ω)=0h_i(\omega)=0\rightarrow \sum_{i=1}^{l}\beta_i h_i(\omega)=0</span></span></li></ul>
+</li></ul>
+<p><br/>
+最终问题转换为： <span><span data-tex="min⁡ωmax⁡α,β,αi⩾0L(ω,α,β)\min_{\omega}\max_{\alpha,\beta,\alpha_i\geqslant0}{\mathcal{L}(\omega,\alpha,\beta)}" data-display="false">min⁡ωmax⁡α,β,αi⩾0L(ω,α,β)\min_{\omega}\max_{\alpha,\beta,\alpha_i\geqslant0}{\mathcal{L}(\omega,\alpha,\beta)}</span></span><br/>
+即：通过内层的 max 调整 <span><span data-tex="α,β\alpha,\beta" data-display="false">α,β\alpha,\beta</span></span>，通过外层的 min 调整 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span><br/>
+<br/>
+原始问题：<span><span data-tex="min⁡ωmax⁡α,β,αi⩾0L(ω,α,β)=p∗\min_{\omega}\max_{\alpha,\beta,\alpha_i\geqslant0}{\mathcal{L}(\omega,\alpha,\beta)}=p^*" data-display="false">min⁡ωmax⁡α,β,αi⩾0L(ω,α,β)=p∗\min_{\omega}\max_{\alpha,\beta,\alpha_i\geqslant0}{\mathcal{L}(\omega,\alpha,\beta)}=p^*</span></span><br/>
+对偶问题：<span><span data-tex="max⁡α,β,αi⩾0min⁡ωL(ω,α,β)=d∗\max_{\alpha,\beta,\alpha_i\geqslant0}\min_{\omega}{\mathcal{L}(\omega,\alpha,\beta)}=d^*" data-display="false">max⁡α,β,αi⩾0min⁡ωL(ω,α,β)=d∗\max_{\alpha,\beta,\alpha_i\geqslant0}\min_{\omega}{\mathcal{L}(\omega,\alpha,\beta)}=d^*</span></span><br/>
+<strong>弱对偶性定理</strong>：<span><span data-tex="d∗⩽p∗d^*\leqslant p^*" data-display="false">d∗⩽p∗d^*\leqslant p^*</span></span> 即对偶问题最优值 <span><span data-tex="⩽\leqslant" data-display="false">⩽\leqslant</span></span> 原始问题最优值</p>
+<ul><li>证明：<br/>
+因为 <span><span data-tex="min⁡ωL(ω,α)⩽L(ω,α)\min_{\omega}\mathcal{L}(\omega,\alpha)\leqslant\mathcal{L}(\omega,\alpha)" data-display="false">min⁡ωL(ω,α)⩽L(ω,α)\min_{\omega}\mathcal{L}(\omega,\alpha)\leqslant\mathcal{L}(\omega,\alpha)</span></span><br/>
+两边同时对 <span><span data-tex="α\alpha" data-display="false">α\alpha</span></span> 取最大，得：<span><span data-tex="max⁡αmin⁡ωL(ω,α)⩽max⁡αL(ω,α)\max_{\alpha}\min_{\omega}\mathcal{L}(\omega,\alpha)\leqslant\max_{\alpha}\mathcal{L}(\omega,\alpha)" data-display="false">max⁡αmin⁡ωL(ω,α)⩽max⁡αL(ω,α)\max_{\alpha}\min_{\omega}\mathcal{L}(\omega,\alpha)\leqslant\max_{\alpha}\mathcal{L}(\omega,\alpha)</span></span><br/>
+既然上式对所有的 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 都成立，那对不等式右边再关于 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 取最小值也依然成立：<br/>
+<span><span data-tex="max⁡αmin⁡ωL(ω,α)⩽min⁡ωmax⁡αL(ω,α)\max_{\alpha}\min_{\omega}\mathcal{L}(\omega,\alpha)\leqslant\min_{\omega}\max_{\alpha}\mathcal{L}(\omega,\alpha)" data-display="false">max⁡αmin⁡ωL(ω,α)⩽min⁡ωmax⁡αL(ω,α)\max_{\alpha}\min_{\omega}\mathcal{L}(\omega,\alpha)\leqslant\min_{\omega}\max_{\alpha}\mathcal{L}(\omega,\alpha)</span></span> 得证</li></ul>
+<p><strong>强对偶性定理</strong>：如果 <span><span data-tex="L(ω,α,β)\mathcal{L}(\omega,\alpha,\beta)" data-display="false">L(ω,α,β)\mathcal{L}(\omega,\alpha,\beta)</span></span> 存在鞍点 <span><span data-tex="(ω∗,α∗)(\omega^*,\alpha^*)" data-display="false">(ω∗,α∗)(\omega^*,\alpha^*)</span></span>，则在鞍点处有 <span><span data-tex="d∗=p∗d^*= p^*" data-display="false">d∗=p∗d^*= p^*</span></span></p>
+<ul><li>鞍点处 <span><span data-tex="对α极大值：L(ω∗,α)⩽L(ω∗,α∗)对ω极小值：L(ω,α∗)⩾L(ω∗,α∗)\left\{
+\begin{aligned}
+对\alpha极大值：\mathcal{L}(\omega^*,\alpha)\leqslant \mathcal{L}(\omega^*,\alpha^*) \\
+对\omega极小值：\mathcal{L}(\omega,\alpha^*)\geqslant \mathcal{L}(\omega^*,\alpha^*)
+\end{aligned}
+\right." data-display="false">对α极大值：L(ω∗,α)⩽L(ω∗,α∗)对ω极小值：L(ω,α∗)⩾L(ω∗,α∗)\left\{
+\begin{aligned}
+对\alpha极大值：\mathcal{L}(\omega^*,\alpha)\leqslant \mathcal{L}(\omega^*,\alpha^*) \\
+对\omega极小值：\mathcal{L}(\omega,\alpha^*)\geqslant \mathcal{L}(\omega^*,\alpha^*)
+\end{aligned}
+\right.</span></span><br/>
+maxmin 和 minmax 在鞍点处形成平衡，最终都选择 <span><span data-tex="(ω∗,α∗)(\omega^*,\alpha^*)" data-display="false">(ω∗,α∗)(\omega^*,\alpha^*)</span></span></li></ul>
+<p>因为SVM是凸二次规划问题，必存在鞍点（根据凸优化理论），所以强对偶性成立<br/>
+<br/>
+<strong>KKT条件</strong>：鞍点必满足下列五个KKT条件</p>
+<ul><li>平稳性条件：<span><span data-tex="∂∂ωiL(ω,α,β)=0\frac{\partial}{\partial \omega_i} \mathcal{L}(\omega, \alpha, \beta) = 0" data-display="false">∂∂ωiL(ω,α,β)=0\frac{\partial}{\partial \omega_i} \mathcal{L}(\omega, \alpha, \beta) = 0</span></span></li><li>对偶平稳性条件：<span><span data-tex="∂∂βiL(ω,α,β)=0\frac{\partial}{\partial \beta_i} \mathcal{L}(\omega, \alpha, \beta) = 0" data-display="false">∂∂βiL(ω,α,β)=0\frac{\partial}{\partial \beta_i} \mathcal{L}(\omega, \alpha, \beta) = 0</span></span> （满足等式约束）</li><li>互补松弛性条件：<span><span data-tex="αigi(ω)=0\alpha_i g_i(\omega) = 0" data-display="false">αigi(ω)=0\alpha_i g_i(\omega) = 0</span></span>
+<ul><li><span><span data-tex="gi(ω)&lt;0g_i(\omega)&lt;0" data-display="false">gi(ω)&lt;0g_i(\omega)&lt;0</span></span> 满足约束，此时 <span><span data-tex="αi=0\alpha_i=0" data-display="false">αi=0\alpha_i=0</span></span></li><li><span><span data-tex="αi&gt;0\alpha_i&gt;0" data-display="false">αi&gt;0\alpha_i&gt;0</span></span> 时，<span><span data-tex="gi(ω)g_i(\omega)" data-display="false">gi(ω)g_i(\omega)</span></span> 会为了避免惩罚使 <span><span data-tex="gi(ω)=0g_i(\omega)=0" data-display="false">gi(ω)=0g_i(\omega)=0</span></span></li></ul>
+</li><li>原始可行性条件：<span><span data-tex="gi(w)≤0g_i(w) \leq 0" data-display="false">gi(w)≤0g_i(w) \leq 0</span></span> （基本约束）</li><li>对偶可行性条件：<span><span data-tex="αi≥0\alpha_i \geq 0" data-display="false">αi≥0\alpha_i \geq 0</span></span> （基本约束）</li></ul>
+</blockquote>
+<p>应用到SVM的具体实例中：</p>
+<p>最初问题：最大化间隔 <span><span data-tex="max⁡ω,b1∥ω∥\max_{\omega, b}{\frac{1}{\Vert\omega\Vert}}" data-display="false">max⁡ω,b1∥ω∥\max_{\omega, b}{\frac{1}{\Vert\omega\Vert}}</span></span><br/>
+所有样本必须正确分类，并在隔离带边界外：<span><span data-tex="yi(ωTxi+b)≥1y_i(\omega^{T}x_i+b)\geq1" data-display="false">yi(ωTxi+b)≥1y_i(\omega^{T}x_i+b)\geq1</span></span></p>
+<p>转化为拉格朗日函数的形式：<br/>
+<span><span><div data-tex="L(ω,b,α)=12ωTω−∑i=1mαi[yi(ωTxi+b)−1]\mathcal{L}(\omega,b,\alpha)=\frac{1}{2}\omega^T\omega-\sum_{i=1}^{m}\alpha_i[y_i(\omega^Tx_i+b)-1]" data-display="true">L(ω,b,α)=12ωTω−∑i=1mαi[yi(ωTxi+b)−1]\mathcal{L}(\omega,b,\alpha)=\frac{1}{2}\omega^T\omega-\sum_{i=1}^{m}\alpha_i[y_i(\omega^Tx_i+b)-1]</div></span></span></p>
+<p>原始问题：<span><span data-tex="min⁡ω,bmax⁡αi≥0L(ω,b,α)\min_{\omega,b}\max_{\alpha_i\geq0}\mathcal{L}(\omega,b,\alpha)" data-display="false">min⁡ω,bmax⁡αi≥0L(ω,b,α)\min_{\omega,b}\max_{\alpha_i\geq0}\mathcal{L}(\omega,b,\alpha)</span></span></p>
+<p>对偶问题：<span><span data-tex="max⁡αi≥0min⁡ω,bL(ω,b,α)\max_{\alpha_i\geq0}\min_{\omega,b}\mathcal{L}(\omega,b,\alpha)" data-display="false">max⁡αi≥0min⁡ω,bL(ω,b,α)\max_{\alpha_i\geq0}\min_{\omega,b}\mathcal{L}(\omega,b,\alpha)</span></span></p>
+<p>先在无约束条件下求 <span><span data-tex="ω,b\omega,b" data-display="false">ω,b\omega,b</span></span>，使偏导为 0 即可</p>
+<ul><li>
+<p>对 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 求偏导：<span><span data-tex="∂∂ωL(ω,b,α)=ω−∑i=1mαiyixi=0\frac{\partial}{\partial \omega} \mathcal{L}(\omega, b, \alpha) = \omega-\sum_{i=1}^{m}{\alpha_iy_ix_i=0}" data-display="false">∂∂ωL(ω,b,α)=ω−∑i=1mαiyixi=0\frac{\partial}{\partial \omega} \mathcal{L}(\omega, b, \alpha) = \omega-\sum_{i=1}^{m}{\alpha_iy_ix_i=0}</span></span></p>
+<p>发现：<span><span data-tex="ω=∑i=1mαiyixi\omega=\sum_{i=1}^{m}{\alpha_iy_ix_i}" data-display="false">ω=∑i=1mαiyixi\omega=\sum_{i=1}^{m}{\alpha_iy_ix_i}</span></span> （式1）</p>
+<p>其中 <span><span data-tex="αi\alpha_i" data-display="false">αi\alpha_i</span></span> 是权重，<span><span data-tex="yi=±1y_i=\pm1" data-display="false">yi=±1y_i=\pm1</span></span></p>
+<p>每次预测一个新的点 <span><span data-tex="zz" data-display="false">zz</span></span>，先计算 <span><span data-tex="ωTz+b=∑i∈SVαiyi(xiTz)+b\omega^Tz+b=\sum_{i\in SV}\alpha_iy_i(x_i^Tz)+b" data-display="false">ωTz+b=∑i∈SVαiyi(xiTz)+b\omega^Tz+b=\sum_{i\in SV}\alpha_iy_i(x_i^Tz)+b</span></span></p>
+<blockquote>
+<p><strong>核技巧（Kernel Trick）</strong><br/>
+在低维无法进行线性SVM时，通过升维进行线性分类<br/>
+<img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/9c4fbe87d55a4eb3a688b2b6a4f7ca29.png"><br/>
+因为样本点 <span><span data-tex="xx" data-display="false">xx</span></span> 只以内积的形式出现，无需真的进行高维映射，只用使用核函数计算出内积，结果等于高位空间的内积即可<br/>
+<strong>核函数</strong>：在低位空间计算高维内积，<span><span data-tex="K(xi,xj)=ϕ(xi)Tϕ(xj)K(x_i,x_j)=\phi(x_i)^T\phi(x_j)" data-display="false">K(xi,xj)=ϕ(xi)Tϕ(xj)K(x_i,x_j)=\phi(x_i)^T\phi(x_j)</span></span><br/>
+常用核函数：<br/>
+- 高斯核 <span><span data-tex="K(x,z)=exp(−∥x−z∥22σ2)K(x,z)=exp(-\frac{\Vert x-z\Vert^2}{2\sigma^2})" data-display="false">K(x,z)=exp(−∥x−z∥22σ2)K(x,z)=exp(-\frac{\Vert x-z\Vert^2}{2\sigma^2})</span></span><br/>
+- 线性核<span><span data-tex="K(x,z)=(xTz+c)dK(x,z)=(x^Tz+c)^d" data-display="false">K(x,z)=(xTz+c)dK(x,z)=(x^Tz+c)^d</span></span></img></p>
+</blockquote>
+<p>最优权重等于训练样本的线性组合，也就是说，只有 <span><span data-tex="αi&gt;0\alpha_i&gt;0" data-display="false">αi&gt;0\alpha_i&gt;0</span></span> 的支持向量才能决定 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span>，大部分都是正确分类的样本 <span><span data-tex="αi=0\alpha_i=0" data-display="false">αi=0\alpha_i=0</span></span>，对 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 有帮助的只有错误分类样本（SVM的稀疏性）</p>
+<p>预测时：<span><span data-tex="y∗(z)=sign(∑i∈SVαiyiK(xi,z)+b)y^*(z)=sign(\sum_{i\in SV}{\alpha_iy_iK(x_i,z)}+b)" data-display="false">y∗(z)=sign(∑i∈SVαiyiK(xi,z)+b)y^*(z)=sign(\sum_{i\in SV}{\alpha_iy_iK(x_i,z)}+b)</span></span></p>
+</li><li>
+<p>对 <span><span data-tex="bb" data-display="false">bb</span></span> 求偏导：<span><span data-tex="∂∂βiL(ω,b,α)=∑i=1mαiyi=0\frac{\partial}{\partial \beta_i} \mathcal{L}(\omega, b,\alpha) = \sum_{i=1}^m{\alpha_iy_i}= 0" data-display="false">∂∂βiL(ω,b,α)=∑i=1mαiyi=0\frac{\partial}{\partial \beta_i} \mathcal{L}(\omega, b,\alpha) = \sum_{i=1}^m{\alpha_iy_i}= 0</span></span> （式2）</p>
+</li></ul>
+<p>把式1和式2代入 <span><span data-tex="L(ω,b,α)\mathcal{L}(\omega,b,\alpha)" data-display="false">L(ω,b,α)\mathcal{L}(\omega,b,\alpha)</span></span>：<br/>
+<span><span><div data-tex="L(ω,b,α)=∑i=1mαi−12∑i,j=1mαiαjyiyj(xiTxj)\mathcal{L}(\omega,b,\alpha)=\sum_{i=1}^{m}\alpha_i-\frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_j(x_i^Tx_j)" data-display="true">L(ω,b,α)=∑i=1mαi−12∑i,j=1mαiαjyiyj(xiTxj)\mathcal{L}(\omega,b,\alpha)=\sum_{i=1}^{m}\alpha_i-\frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_j(x_i^Tx_j)</div></span></span></p>
+<p>即：<span><span><div data-tex="max⁡αJ(α)=∑i=1mαi−12∑i,j=1mαiαjyiyj(xiTxj)\max_\alpha\mathcal{J}(\alpha)=\sum_{i=1}^{m}\alpha_i-\frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_j(x_i^Tx_j)" data-display="true">max⁡αJ(α)=∑i=1mαi−12∑i,j=1mαiαjyiyj(xiTxj)\max_\alpha\mathcal{J}(\alpha)=\sum_{i=1}^{m}\alpha_i-\frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_j(x_i^Tx_j)</div></span></span><br/>
+约束：<span><span><div data-tex="αi≥0∑i=1mαiyi=0\left\{
+\begin{aligned}
+\alpha_i\geq0 \\
+\sum_{i=1}^{m}\alpha_iy_i=0
+\end{aligned}
+\right." data-display="true">αi≥0∑i=1mαiyi=0\left\{
+\begin{aligned}
+\alpha_i\geq0 \\
+\sum_{i=1}^{m}\alpha_iy_i=0
+\end{aligned}
+\right.</div></span></span></p>
+<p>代入核函数：<span><span><div data-tex="max⁡αJ(α)=∑i=1mαi−12∑i,j=1mαiαjyiyjK(xi，xj)\max_\alpha\mathcal{J}(\alpha)=\sum_{i=1}^{m}\alpha_i-\frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_jK(x_i，x_j)" data-display="true">max⁡αJ(α)=∑i=1mαi−12∑i,j=1mαiαjyiyjK(xi，xj)\max_\alpha\mathcal{J}(\alpha)=\sum_{i=1}^{m}\alpha_i-\frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_jK(x_i，x_j)</div></span></span></p>
+<p><strong>软间隔的对偶问题推导</strong></p>
+<p>硬间隔的约束是 <span><span data-tex="yi(ωTxi+b)≥1y_i(\omega^Tx_i+b)\geq 1" data-display="false">yi(ωTxi+b)≥1y_i(\omega^Tx_i+b)\geq 1</span></span>。<br/>
+软间隔引入了松弛变量 <span><span data-tex="ξi\xi_i" data-display="false">ξi\xi_i</span></span>，约束变为：</p>
+<ul><li><span><span data-tex="yi(ωTxi+b)≥1−ξiy_i(\omega^Tx_i+b) \geq 1 - \xi_i" data-display="false">yi(ωTxi+b)≥1−ξiy_i(\omega^Tx_i+b) \geq 1 - \xi_i</span></span></li><li><span><span data-tex="ξi≥0\xi_i \geq 0" data-display="false">ξi≥0\xi_i \geq 0</span></span></li></ul>
+<p>因此，软间隔的拉格朗日函数需要引入两组乘子：<span><span data-tex="αi≥0\alpha_i \geq 0" data-display="false">αi≥0\alpha_i \geq 0</span></span>（对应约束1）和 <span><span data-tex="βi≥0\beta_i \geq 0" data-display="false">βi≥0\beta_i \geq 0</span></span>（对应约束2）。</p>
+<p><strong>原始拉格朗日函数：</strong><br/>
+<span><span><div data-tex="L(ω,b,ξ,α,β)=12ωTω+C∑i=1mξi−∑i=1mαi[yi(ωTxi+b)−1+ξi]−∑i=1mβiξi\mathcal{L}(\omega, b, \xi, \alpha, \beta) = \frac{1}{2}\omega^T\omega + C\sum_{i=1}^m \xi_i - \sum_{i=1}^m \alpha_i [y_i(\omega^Tx_i + b) - 1 + \xi_i] - \sum_{i=1}^m \beta_i \xi_i" data-display="true">L(ω,b,ξ,α,β)=12ωTω+C∑i=1mξi−∑i=1mαi[yi(ωTxi+b)−1+ξi]−∑i=1mβiξi\mathcal{L}(\omega, b, \xi, \alpha, \beta) = \frac{1}{2}\omega^T\omega + C\sum_{i=1}^m \xi_i - \sum_{i=1}^m \alpha_i [y_i(\omega^Tx_i + b) - 1 + \xi_i] - \sum_{i=1}^m \beta_i \xi_i</div></span></span></p>
+<p><strong>原始问题：</strong><br/>
+<span><span><div data-tex="min⁡ω,b,ξmax⁡α≥0,β≥0L\min_{\omega, b, \xi} \max_{\alpha \geq 0, \beta \geq 0} \mathcal{L}" data-display="true">min⁡ω,b,ξmax⁡α≥0,β≥0L\min_{\omega, b, \xi} \max_{\alpha \geq 0, \beta \geq 0} \mathcal{L}</div></span></span></p>
+<p><strong>对偶问题：</strong><br/>
+<span><span><div data-tex="max⁡α≥0,β≥0min⁡ω,b,ξL\max_{\alpha \geq 0, \beta \geq 0} \min_{\omega, b, \xi} \mathcal{L}" data-display="true">max⁡α≥0,β≥0min⁡ω,b,ξL\max_{\alpha \geq 0, \beta \geq 0} \min_{\omega, b, \xi} \mathcal{L}</div></span></span></p>
+<p><strong>对 <span><span data-tex="ω,b,ξ\omega, b, \xi" data-display="false">ω,b,ξ\omega, b, \xi</span></span> 求偏导并令其为 0：</strong></p>
+<ol><li>对 <span><span data-tex="ω\omega" data-display="false">ω\omega</span></span> 求偏导：<span><span data-tex="ω=∑i=1mαiyixi\omega = \sum_{i=1}^m \alpha_i y_i x_i" data-display="false">ω=∑i=1mαiyixi\omega = \sum_{i=1}^m \alpha_i y_i x_i</span></span> （和硬间隔一样）</li><li>对 <span><span data-tex="bb" data-display="false">bb</span></span> 求偏导：<span><span data-tex="∑i=1mαiyi=0\sum_{i=1}^m \alpha_i y_i = 0" data-display="false">∑i=1mαiyi=0\sum_{i=1}^m \alpha_i y_i = 0</span></span> （和硬间隔一样）</li><li><strong>对 <span><span data-tex="ξi\xi_i" data-display="false">ξi\xi_i</span></span> 求偏导：</strong><br/>
+<span><span><div data-tex="C−αi−βi=0  ⟹  αi+βi=CC - \alpha_i - \beta_i = 0 \implies \alpha_i + \beta_i = C" data-display="true">C−αi−βi=0  ⟹  αi+βi=CC - \alpha_i - \beta_i = 0 \implies \alpha_i + \beta_i = C</div></span></span><br/>
+因为 <span><span data-tex="βi≥0\beta_i \geq 0" data-display="false">βi≥0\beta_i \geq 0</span></span> 是约束，所以得出 <span><span data-tex="αi≤C\alpha_i \leq C" data-display="false">αi≤C\alpha_i \leq C</span></span>。</li></ol>
+<p><strong>最终软间隔的对偶问题：</strong><br/>
+将上述式子代回 <span><span data-tex="L\mathcal{L}" data-display="false">L\mathcal{L}</span></span>，<span><span data-tex="ξi\xi_i" data-display="false">ξi\xi_i</span></span> 和 <span><span data-tex="βi\beta_i" data-display="false">βi\beta_i</span></span> 都会被消去，最终的优化目标与硬间隔完全一样，仅仅是约束条件多了一个上限 <span><span data-tex="CC" data-display="false">CC</span></span>：<br/>
+<span><span><div data-tex="max⁡α∑i=1mαi−12∑i,j=1mαiαjyiyj(xiTxj)\max_\alpha \sum_{i=1}^{m}\alpha_i - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_j(x_i^Tx_j)" data-display="true">max⁡α∑i=1mαi−12∑i,j=1mαiαjyiyj(xiTxj)\max_\alpha \sum_{i=1}^{m}\alpha_i - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_i\alpha_jy_iy_j(x_i^Tx_j)</div></span></span><br/>
+<span><span><div data-tex="0≤αi≤C∑i=1mαiyi=0\text{s.t.} \quad \begin{cases} 0 \leq \alpha_i \leq C \\ \sum_{i=1}^{m}\alpha_iy_i = 0 \end{cases}" data-display="true">0≤αi≤C∑i=1mαiyi=0\text{s.t.} \quad \begin{cases} 0 \leq \alpha_i \leq C \\ \sum_{i=1}^{m}\alpha_iy_i = 0 \end{cases}</div></span></span></p>
+<p>强制 <span><span data-tex="αi≤C\alpha_i \leq C" data-display="false">αi≤C\alpha_i \leq C</span></span>，封顶了单个样本的最大影响力，强迫模型放弃那些极度离群的异常点</p>
+<hr/>
+<p><strong>SMO序列最小优化算法：坐标上升法</strong></p>
+<p>每次挑两个<span><span data-tex="αi,αj\alpha_i, \alpha_j" data-display="false">αi,αj\alpha_i, \alpha_j</span></span>，其余固定 m-2 个，问题变成一元二次函数求极值，不断循环到收敛</p>
+<p>比如我们挑前两个，<span><span data-tex="α1y1+α2y2+∑i=3mαiyi=0\alpha_1y_1+\alpha_2y_2+\sum_{i=3}^m\alpha_iy_i=0" data-display="false">α1y1+α2y2+∑i=3mαiyi=0\alpha_1y_1+\alpha_2y_2+\sum_{i=3}^m\alpha_iy_i=0</span></span></p>
+<p>因为 <span><span data-tex="α3\alpha_3" data-display="false">α3\alpha_3</span></span> 到 <span><span data-tex="αm\alpha_m" data-display="false">αm\alpha_m</span></span> 被固定了，所以后面那一串就是已知常数，记为 <span><span data-tex="−ξ-\xi" data-display="false">−ξ-\xi</span></span></p>
+<p>等式变成 <span><span data-tex="α1y1+α2y2=ξ\alpha_1y_1+\alpha_2y_2=\xi" data-display="false">α1y1+α2y2=ξ\alpha_1y_1+\alpha_2y_2=\xi</span></span></p>
+<p><span><span data-tex="J(α1,α2,…,αm)=J((ξ−α2y2)y1,α2,…,αm)\mathcal{J}(\alpha_1, \alpha_2, \dots, \alpha_m) = \mathcal{J}((\xi - \alpha_2 y_2)y_1, \alpha_2, \dots, \alpha_m)" data-display="false">J(α1,α2,…,αm)=J((ξ−α2y2)y1,α2,…,αm)\mathcal{J}(\alpha_1, \alpha_2, \dots, \alpha_m) = \mathcal{J}((\xi - \alpha_2 y_2)y_1, \alpha_2, \dots, \alpha_m)</span></span></p>
+<p>约束（软间隔）：</p>
+<ul><li><span><span data-tex="0≤α1≤C0\leq\alpha_1\leq C" data-display="false">0≤α1≤C0\leq\alpha_1\leq C</span></span></li><li><span><span data-tex="0≤α2≤C0\leq\alpha_2\leq C" data-display="false">0≤α2≤C0\leq\alpha_2\leq C</span></span></li></ul>
+<p>横纵坐标分别为 <span><span data-tex="α1,α2\alpha_1,\alpha_2" data-display="false">α1,α2\alpha_1,\alpha_2</span></span>，只能在图中方框内的线段里取值</p>
+<p><img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/6ee091058332443e9626cff79563f140.png"/></p>
+</div>
+</main>
+</body>
+</html>

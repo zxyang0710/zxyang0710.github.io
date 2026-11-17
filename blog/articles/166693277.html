@@ -1,0 +1,6367 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>计算学习理论 复习笔记 · zxyang</title>
+<link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/article.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script defer src="../render-math.js"></script>
+</head>
+<body>
+<main class="reading">
+<a href="../">← 返回 Blog</a>
+<h1>计算学习理论 复习笔记</h1>
+<time datetime="2026-09-28T02:16:11+08:00">2026-09-28</time>
+<div class="prose">
+
+<p></p>
+<div>
+<h4>文章目录</h4>
+<ul><li><ul><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_3">两种基础框架</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_11">基本设定</a></li><li><ul><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_12">已知条件</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_17">输入</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_19">输出</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_True_error_24">真实误差 True error</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_Training_error_30">训练误差 Training error</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_39">霍夫丁不等式</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_Version_Space_48">版本空间 Version Space</a></li></ul>
+</li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#PAC__55">PAC 框架</a></li><li><ul><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_56">目标</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_61">核心思想：双重对冲</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_65">穷尽版本空间</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_68">核心定理</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_82">总结</a></li></ul>
+</li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_Agnostic_Learning_94">不可知学习 Agnostic Learning</a></li><li><ul><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_97">核心定理</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_ERMEmpirical_Risk_Minimization_102">经验风险最小化 ERM（Empirical Risk Minimization）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_108">误分类概率</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#_114">一致收敛</a></li></ul>
+</li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/166693277#VCVapnikChervonenkis_Dimension_133">VC维（Vapnik-Chervonenkis Dimension）</a></li></ul>
+</li></ul>
+</div>
+<p></p>
+<h3><a></a>两种基础框架</h3>
+<ul><li><strong>PAC框架</strong><br/> 数据理想化，假设存在完美规律，并且模型能够覆盖<br/> <span><span data-tex="E
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         r
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         ε
+        
+       
+       
+        Error(h)\leq\varepsilon" data-display="false">E
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         r
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         ε
+        
+       
+       
+        Error(h)\leq\varepsilon</span></span>，绝对误差趋近于 0</li><li><strong>Agnostic框架</strong><br/> 数据现实化，数据可能有噪声，或者规律超出了模型的能力<br/> 假设空间 H 中表现最好的模型设为 <span><span data-tex="h
+         
+         
+          ∗
+         
+        
+       
+       
+        h^*" data-display="false">h
+         
+         
+          ∗
+         
+        
+       
+       
+        h^*</span></span><br/> 要求 <span><span data-tex="E
+        
+        
+         r
+        
+        
+         o
+        
+        
+         r
+        
+        
+         r
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         E
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         r
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          ∗
+         
+        
+        
+         )
+        
+        
+         +
+        
+        
+         ε
+        
+       
+       
+        Erorr(h)\leq Error(h^*)+\varepsilon" data-display="false">E
+        
+        
+         r
+        
+        
+         o
+        
+        
+         r
+        
+        
+         r
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         E
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         r
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          ∗
+         
+        
+        
+         )
+        
+        
+         +
+        
+        
+         ε
+        
+       
+       
+        Erorr(h)\leq Error(h^*)+\varepsilon</span></span>，相对误差趋近于最优解</li></ul>
+<h3><a></a>基本设定</h3>
+<h4><a></a>已知条件</h4>
+<ul><li>样本空间 <span><span data-tex="X
+        
+       
+       
+        X" data-display="false">X
+        
+       
+       
+        X</span></span>：所有可能出现的实例集合</li><li>固定的未知分布 <span><span data-tex="D
+        
+       
+       
+        D" data-display="false">D
+        
+       
+       
+        D</span></span>：数据按规律随机产生</li><li>假设空间 <span><span data-tex="H
+        
+       
+       
+        H" data-display="false">H
+        
+       
+       
+        H</span></span>：学习器可以用的所有模型的集合</li><li>目标概念空间 <span><span data-tex="C
+        
+       
+       
+        C" data-display="false">C
+        
+       
+       
+        C</span></span>：真实预测规律的集合</li></ul>
+<h4><a></a>输入</h4>
+<p>训练样本集 <span><span data-tex="S
+       
+       
+        =
+       
+       
+        
+         ⟨
+        
+        
+         
+          x
+         
+         
+          i
+         
+        
+        
+         ,
+        
+        
+         c
+        
+        
+         (
+        
+        
+         
+          x
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ⟩
+        
+       
+      
+      
+       S={\langle x_i, c(x_i)\rangle}" data-display="false">S
+       
+       
+        =
+       
+       
+        
+         ⟨
+        
+        
+         
+          x
+         
+         
+          i
+         
+        
+        
+         ,
+        
+        
+         c
+        
+        
+         (
+        
+        
+         
+          x
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ⟩
+        
+       
+      
+      
+       S={\langle x_i, c(x_i)\rangle}</span></span></p>
+<h4><a></a>输出</h4>
+<p>学习器从假设空间 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 中选了一个 <span><span data-tex="h
+       
+      
+      
+       h" data-display="false">h
+       
+      
+      
+       h</span></span> 猜测真实规律 <span><span data-tex="c
+       
+      
+      
+       c" data-display="false">c
+       
+      
+      
+       c</span></span><br/> 怎么判断选择的 <span><span data-tex="h
+       
+      
+      
+       h" data-display="false">h
+       
+      
+      
+       h</span></span> 好不好？<br/> 看它在同一个分布 <span><span data-tex="D
+       
+      
+      
+       D" data-display="false">D
+       
+      
+      
+       D</span></span> 中抽取的新数据上的表现，即泛化能力</p>
+<h4><a></a>真实误差 True error</h4>
+<p><img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/f183d7e3b1394fa89752c385019e93ca.png"><br/> 箭头所指即真实规律和我们的模型产生分歧的地方<br/> <span><span data-tex="ϵ
+        
+        
+         D
+        
+       
+       
+        (
+       
+       
+        h
+       
+       
+        )
+       
+       
+        ≡
+       
+       
+        P
+       
+       
+        
+         r
+        
+        
+         
+          x
+         
+         
+          ∈
+         
+         
+          D
+         
+        
+       
+       
+        [
+       
+       
+        c
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ≠
+       
+       
+        h
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ]
+       
+      
+      
+       \epsilon_{\mathcal{D}}(h)\equiv Pr_{x\in\mathcal{D}}[c(x)\neq h(x)]" data-display="false">ϵ
+        
+        
+         D
+        
+       
+       
+        (
+       
+       
+        h
+       
+       
+        )
+       
+       
+        ≡
+       
+       
+        P
+       
+       
+        
+         r
+        
+        
+         
+          x
+         
+         
+          ∈
+         
+         
+          D
+         
+        
+       
+       
+        [
+       
+       
+        c
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ≠
+       
+       
+        h
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ]
+       
+      
+      
+       \epsilon_{\mathcal{D}}(h)\equiv Pr_{x\in\mathcal{D}}[c(x)\neq h(x)]</span></span><br/> 不可计算</img></p>
+<h4><a></a>训练误差 Training error</h4>
+<p>判定模型在训练集上的表现<br/> <span><span data-tex="ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        ≡
+       
+       
+        P
+       
+       
+        
+         r
+        
+        
+         
+          x
+         
+         
+          ∈
+         
+         
+          S
+         
+        
+       
+       
+        [
+       
+       
+        c
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ≠
+       
+       
+        h
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ]
+       
+       
+        ≡
+       
+       
+        
+         
+          
+           ∑
+          
+          
+           
+            x
+           
+           
+            ∈
+           
+           
+            S
+           
+          
+         
+         
+          δ
+         
+         
+          (
+         
+         
+          c
+         
+         
+          (
+         
+         
+          x
+         
+         
+          )
+         
+         
+          ≠
+         
+         
+          h
+         
+         
+          (
+         
+         
+          x
+         
+         
+          )
+         
+         
+          )
+         
+        
+        
+         
+          ∣
+         
+         
+          S
+         
+         
+          ∣
+         
+        
+       
+      
+      
+       \overset{\wedge}{\epsilon}\equiv Pr_{x\in \mathcal{S}}[c(x)\neq h(x)]\equiv\frac{\sum_{x\in \mathcal{S}}\delta(c(x)\neq h(x))}{\vert\mathcal{S}\vert}" data-display="false">ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        ≡
+       
+       
+        P
+       
+       
+        
+         r
+        
+        
+         
+          x
+         
+         
+          ∈
+         
+         
+          S
+         
+        
+       
+       
+        [
+       
+       
+        c
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ≠
+       
+       
+        h
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ]
+       
+       
+        ≡
+       
+       
+        
+         
+          
+           ∑
+          
+          
+           
+            x
+           
+           
+            ∈
+           
+           
+            S
+           
+          
+         
+         
+          δ
+         
+         
+          (
+         
+         
+          c
+         
+         
+          (
+         
+         
+          x
+         
+         
+          )
+         
+         
+          ≠
+         
+         
+          h
+         
+         
+          (
+         
+         
+          x
+         
+         
+          )
+         
+         
+          )
+         
+        
+        
+         
+          ∣
+         
+         
+          S
+         
+         
+          ∣
+         
+        
+       
+      
+      
+       \overset{\wedge}{\epsilon}\equiv Pr_{x\in \mathcal{S}}[c(x)\neq h(x)]\equiv\frac{\sum_{x\in \mathcal{S}}\delta(c(x)\neq h(x))}{\vert\mathcal{S}\vert}</span></span><br/> 可计算</p>
+<blockquote>
+<p><strong>并集引理</strong><br/> <span><span data-tex="P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          1
+         
+        
+        
+         ∪
+        
+        
+         
+          A
+         
+         
+          2
+         
+        
+        
+         ∪
+        
+        
+         .
+        
+        
+         .
+        
+        
+         .
+        
+        
+         ∪
+        
+        
+         
+          A
+         
+         
+          k
+         
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          1
+         
+        
+        
+         )
+        
+        
+         +
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          2
+         
+        
+        
+         )
+        
+        
+         +
+        
+        
+         .
+        
+        
+         .
+        
+        
+         .
+        
+        
+         +
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          k
+         
+        
+        
+         )
+        
+       
+       
+        P(A_1\cup A_2\cup...\cup A_k)\leq P(A_1)+P(A_2)+...+P(A_k)" data-display="false">P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          1
+         
+        
+        
+         ∪
+        
+        
+         
+          A
+         
+         
+          2
+         
+        
+        
+         ∪
+        
+        
+         .
+        
+        
+         .
+        
+        
+         .
+        
+        
+         ∪
+        
+        
+         
+          A
+         
+         
+          k
+         
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          1
+         
+        
+        
+         )
+        
+        
+         +
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          2
+         
+        
+        
+         )
+        
+        
+         +
+        
+        
+         .
+        
+        
+         .
+        
+        
+         .
+        
+        
+         +
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          k
+         
+        
+        
+         )
+        
+       
+       
+        P(A_1\cup A_2\cup...\cup A_k)\leq P(A_1)+P(A_2)+...+P(A_k)</span></span><br/> 多事件中至少发生一个的概率小于等于各自概率的总和</p>
+</blockquote>
+<h4><a></a>霍夫丁不等式</h4>
+<p>m 个独立同分布随机变量满足伯努利分布，<span><span data-tex="P
+       
+       
+        (
+       
+       
+        
+         Z
+        
+        
+         i
+        
+       
+       
+        =
+       
+       
+        1
+       
+       
+        )
+       
+       
+        =
+       
+       
+        ϕ
+       
+      
+      
+       P(Z_i=1)=\phi" data-display="false">P
+       
+       
+        (
+       
+       
+        
+         Z
+        
+        
+         i
+        
+       
+       
+        =
+       
+       
+        1
+       
+       
+        )
+       
+       
+        =
+       
+       
+        ϕ
+       
+      
+      
+       P(Z_i=1)=\phi</span></span>，<span><span data-tex="P
+       
+       
+        (
+       
+       
+        
+         Z
+        
+        
+         i
+        
+       
+       
+        =
+       
+       
+        0
+       
+       
+        )
+       
+       
+        =
+       
+       
+        1
+       
+       
+        −
+       
+       
+        ϕ
+       
+      
+      
+       P(Z_i=0)=1-\phi" data-display="false">P
+       
+       
+        (
+       
+       
+        
+         Z
+        
+        
+         i
+        
+       
+       
+        =
+       
+       
+        0
+       
+       
+        )
+       
+       
+        =
+       
+       
+        1
+       
+       
+        −
+       
+       
+        ϕ
+       
+      
+      
+       P(Z_i=0)=1-\phi</span></span><br/> 实际观测概率：<span><span data-tex="ϕ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        =
+       
+       
+        (
+       
+       
+        1
+       
+       
+        /
+       
+       
+        m
+       
+       
+        )
+       
+       
+        
+         ∑
+        
+        
+         
+          i
+         
+         
+          −
+         
+         
+          1
+         
+        
+        
+         m
+        
+       
+       
+        
+         Z
+        
+        
+         i
+        
+       
+      
+      
+       \overset{\wedge}{\phi}=(1/m)\sum_{i-1}^mZ_i" data-display="false">ϕ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        =
+       
+       
+        (
+       
+       
+        1
+       
+       
+        /
+       
+       
+        m
+       
+       
+        )
+       
+       
+        
+         ∑
+        
+        
+         
+          i
+         
+         
+          −
+         
+         
+          1
+         
+        
+        
+         m
+        
+       
+       
+        
+         Z
+        
+        
+         i
+        
+       
+      
+      
+       \overset{\wedge}{\phi}=(1/m)\sum_{i-1}^mZ_i</span></span><br/> 观测值偏离真实值超过一定误差界限的概率有上界，为：<br/> <span><span><div data-tex="P
+        
+        
+         (
+        
+        
+         ∣
+        
+        
+         ϕ
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϕ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         ∣
+        
+        
+         &gt;
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         2
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         )
+        
+       
+       
+        P(\vert \phi-\overset{\wedge}{\phi}\vert&gt;\gamma)\leq2exp(-2\gamma^2)" data-display="true">P
+        
+        
+         (
+        
+        
+         ∣
+        
+        
+         ϕ
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϕ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         ∣
+        
+        
+         &gt;
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         ≤
+        
+        
+         2
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         )
+        
+       
+       
+        P(\vert \phi-\overset{\wedge}{\phi}\vert&gt;\gamma)\leq2exp(-2\gamma^2)</div></span></span><br/> 样本量 <span><span data-tex="m
+       
+      
+      
+       m" data-display="false">m
+       
+      
+      
+       m</span></span> 越多，犯错概率越小<br/> <span><span data-tex="γ
+       
+      
+      
+       \gamma" data-display="false">γ
+       
+      
+      
+       \gamma</span></span> 越大，越容易满足<br/> <span><span data-tex="γ
+       
+      
+      
+       \gamma" data-display="false">γ
+       
+      
+      
+       \gamma</span></span> 越小，要维持同样的概率上界，需要更多的 <span><span data-tex="m
+       
+      
+      
+       m" data-display="false">m
+       
+      
+      
+       m</span></span> 补偿</p>
+<h4><a></a>版本空间 Version Space</h4>
+<ul><li>模型在训练集上零误差，说明模型 <span><span data-tex="h
+        
+       
+       
+        h" data-display="false">h
+        
+       
+       
+        h</span></span> 和训练集 <span><span data-tex="S
+        
+       
+       
+        S" data-display="false">S
+        
+       
+       
+        S</span></span> 是一致的<br/> <span><span data-tex="C
+        
+        
+         o
+        
+        
+         n
+        
+        
+         s
+        
+        
+         i
+        
+        
+         s
+        
+        
+         t
+        
+        
+         e
+        
+        
+         n
+        
+        
+         t
+        
+        
+         (
+        
+        
+         h
+        
+        
+         ,
+        
+        
+         S
+        
+        
+         )
+        
+        
+         ⊨
+        
+        
+         h
+        
+        
+         (
+        
+        
+         x
+        
+        
+         )
+        
+        
+         =
+        
+        
+         c
+        
+        
+         (
+        
+        
+         x
+        
+        
+         )
+        
+        
+         ,
+        
+        
+         ∀
+        
+        
+         ⟨
+        
+        
+         x
+        
+        
+         ,
+        
+        
+         c
+        
+        
+         (
+        
+        
+         x
+        
+        
+         )
+        
+        
+         ⟩
+        
+        
+         ∈
+        
+        
+         S
+        
+       
+       
+        Consistent(h, S) \models h(x)=c(x), \forall\langle x,c(x)\rangle\in S" data-display="false">C
+        
+        
+         o
+        
+        
+         n
+        
+        
+         s
+        
+        
+         i
+        
+        
+         s
+        
+        
+         t
+        
+        
+         e
+        
+        
+         n
+        
+        
+         t
+        
+        
+         (
+        
+        
+         h
+        
+        
+         ,
+        
+        
+         S
+        
+        
+         )
+        
+        
+         ⊨
+        
+        
+         h
+        
+        
+         (
+        
+        
+         x
+        
+        
+         )
+        
+        
+         =
+        
+        
+         c
+        
+        
+         (
+        
+        
+         x
+        
+        
+         )
+        
+        
+         ,
+        
+        
+         ∀
+        
+        
+         ⟨
+        
+        
+         x
+        
+        
+         ,
+        
+        
+         c
+        
+        
+         (
+        
+        
+         x
+        
+        
+         )
+        
+        
+         ⟩
+        
+        
+         ∈
+        
+        
+         S
+        
+       
+       
+        Consistent(h, S) \models h(x)=c(x), \forall\langle x,c(x)\rangle\in S</span></span></li><li><strong>版本空间 VS</strong>：所有能在训练集上全对的假设 <span><span data-tex="h
+        
+       
+       
+        h" data-display="false">h
+        
+       
+       
+        h</span></span></li><li><strong>一致学习器</strong>：在训练集上零误差的学习器<br/> 一致学习器得到的模型一定在版本空间内</li></ul>
+<h3><a></a>PAC 框架</h3>
+<h4><a></a>目标</h4>
+<ul><li>产出假设：PAC-learner 训练后输出一个模型 <span><span data-tex="h
+        
+       
+       
+        h" data-display="false">h
+        
+       
+       
+        h</span></span></li><li>近似正确：误差大概率趋近于 <span><span data-tex="0
+        
+       
+       
+        0" data-display="false">0
+        
+       
+       
+        0</span></span></li><li>大概率保证：learner 学出一个好模型的概率趋向于 <span><span data-tex="1
+        
+       
+       
+        1" data-display="false">1
+        
+       
+       
+        1</span></span></li></ul>
+<h4><a></a>核心思想：双重对冲</h4>
+<ul><li>近似性：放弃对绝对完美的追求，让误差小于 <span><span data-tex="ε
+        
+       
+       
+        \varepsilon" data-display="false">ε
+        
+       
+       
+        \varepsilon</span></span></li><li>概率性：放弃对绝对保证的追求，让成功率大于 <span><span data-tex="1
+        
+        
+         −
+        
+        
+         δ
+        
+       
+       
+        1-\delta" data-display="false">1
+        
+        
+         −
+        
+        
+         δ
+        
+       
+       
+        1-\delta</span></span></li></ul>
+<h4><a></a>穷尽版本空间</h4>
+<p>如果 VS 中的每个模型真实误差都小于 <span><span data-tex="ε
+       
+      
+      
+       \varepsilon" data-display="false">ε
+       
+      
+      
+       \varepsilon</span></span>，称为这个 VS 被 <span><span data-tex="ε
+       
+      
+      
+       \varepsilon" data-display="false">ε
+       
+      
+      
+       \varepsilon</span></span> 穷尽<img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/7206dd00d301431cb077065dd6db969e.png"/></p>
+<h4><a></a>核心定理</h4>
+<p>假设空间 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 有限，<span><span data-tex="S
+       
+      
+      
+       S" data-display="false">S
+       
+      
+      
+       S</span></span> 包含 <span><span data-tex="m
+       
+      
+      
+       m" data-display="false">m
+       
+      
+      
+       m</span></span> 个独立同分布样本，对于任意 <span><span data-tex="0
+       
+       
+        ≤
+       
+       
+        ε
+       
+       
+        ≤
+       
+       
+        
+         1
+        
+        
+         2
+        
+       
+      
+      
+       0\leq \varepsilon \leq \frac{1}{2}" data-display="false">0
+       
+       
+        ≤
+       
+       
+        ε
+       
+       
+        ≤
+       
+       
+        
+         1
+        
+        
+         2
+        
+       
+      
+      
+       0\leq \varepsilon \leq \frac{1}{2}</span></span> 的情况，VS 未能被 <span><span data-tex="ε
+       
+      
+      
+       \varepsilon" data-display="false">ε
+       
+      
+      
+       \varepsilon</span></span> 穷尽的概率小于 <span><span data-tex="∣
+       
+       
+        H
+       
+       
+        ∣
+       
+       
+        
+         e
+        
+        
+         
+          −
+         
+         
+          ϵ
+         
+         
+          m
+         
+        
+       
+      
+      
+       \vert H\vert e^{-\epsilon m}" data-display="false">∣
+       
+       
+        H
+       
+       
+        ∣
+       
+       
+        
+         e
+        
+        
+         
+          −
+         
+         
+          ϵ
+         
+         
+          m
+         
+        
+       
+      
+      
+       \vert H\vert e^{-\epsilon m}</span></span></p>
+<p>即候选模型越多 / 样本越少 / 误差边界越小，VS无法被穷尽的概率越高</p>
+<p>设最大失败概率 <span><span data-tex="δ
+       
+      
+      
+       \delta" data-display="false">δ
+       
+      
+      
+       \delta</span></span>，则有 <span><span data-tex="∣
+       
+       
+        H
+       
+       
+        ∣
+       
+       
+        
+         e
+        
+        
+         
+          −
+         
+         
+          ϵ
+         
+         
+          m
+         
+        
+       
+       
+        ≤
+       
+       
+        δ
+       
+      
+      
+       \vert H\vert e^{-\epsilon m}\leq \delta" data-display="false">∣
+       
+       
+        H
+       
+       
+        ∣
+       
+       
+        
+         e
+        
+        
+         
+          −
+         
+         
+          ϵ
+         
+         
+          m
+         
+        
+       
+       
+        ≤
+       
+       
+        δ
+       
+      
+      
+       \vert H\vert e^{-\epsilon m}\leq \delta</span></span></p>
+<p>可以得到：</p>
+<ul><li>需要准备的样本数 <span><span data-tex="m
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          ϵ
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         ∣
+        
+        
+         )
+        
+       
+       
+        m\geq \frac{1}{\epsilon}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)" data-display="false">m
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          ϵ
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         ∣
+        
+        
+         )
+        
+       
+       
+        m\geq \frac{1}{\epsilon}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)</span></span></li><li>泛化误差 <span><span data-tex="ϵ
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          m
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         ∣
+        
+        
+         )
+        
+       
+       
+        \epsilon\geq \frac{1}{m}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)" data-display="false">ϵ
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          m
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         ∣
+        
+        
+         )
+        
+       
+       
+        \epsilon\geq \frac{1}{m}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)</span></span></li><li>真实误差 <span><span data-tex="e
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         
+          r
+         
+         
+          
+           t
+          
+          
+           r
+          
+          
+           u
+          
+          
+           e
+          
+         
+        
+        
+         ≤
+        
+        
+         
+          1
+         
+         
+          m
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         (
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         )
+        
+        
+         )
+        
+       
+       
+        error_{true}\leq \frac{1}{m}(ln\vert H\vert+ln(\frac{1}{\delta}))" data-display="false">e
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         
+          r
+         
+         
+          
+           t
+          
+          
+           r
+          
+          
+           u
+          
+          
+           e
+          
+         
+        
+        
+         ≤
+        
+        
+         
+          1
+         
+         
+          m
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         (
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         )
+        
+        
+         )
+        
+       
+       
+        error_{true}\leq \frac{1}{m}(ln\vert H\vert+ln(\frac{1}{\delta}))</span></span>
+<blockquote>
+<p>因为泛化误差 <span><span data-tex="ϵ
+          
+          
+           ≥
+          
+          
+           
+            1
+           
+           
+            m
+           
+          
+          
+           (
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           H
+          
+          
+           ∣
+          
+          
+           +
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           
+            1
+           
+           
+            δ
+           
+          
+          
+           ∣
+          
+          
+           )
+          
+         
+         
+          \epsilon\geq \frac{1}{m}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)" data-display="false">ϵ
+          
+          
+           ≥
+          
+          
+           
+            1
+           
+           
+            m
+           
+          
+          
+           (
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           H
+          
+          
+           ∣
+          
+          
+           +
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           
+            1
+           
+           
+            δ
+           
+          
+          
+           ∣
+          
+          
+           )
+          
+         
+         
+          \epsilon\geq \frac{1}{m}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)</span></span> 才能使模型失败概率小于等于 <span><span data-tex="δ
+          
+         
+         
+          \delta" data-display="false">δ
+          
+         
+         
+          \delta</span></span>，所以 <span><span data-tex="ϵ
+           
+           
+            
+             m
+            
+            
+             i
+            
+            
+             n
+            
+           
+          
+          
+           =
+          
+          
+           
+            1
+           
+           
+            m
+           
+          
+          
+           (
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           H
+          
+          
+           ∣
+          
+          
+           +
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           
+            1
+           
+           
+            δ
+           
+          
+          
+           ∣
+          
+          
+           )
+          
+         
+         
+          \epsilon_{min}=\frac{1}{m}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)" data-display="false">ϵ
+           
+           
+            
+             m
+            
+            
+             i
+            
+            
+             n
+            
+           
+          
+          
+           =
+          
+          
+           
+            1
+           
+           
+            m
+           
+          
+          
+           (
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           H
+          
+          
+           ∣
+          
+          
+           +
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           
+            1
+           
+           
+            δ
+           
+          
+          
+           ∣
+          
+          
+           )
+          
+         
+         
+          \epsilon_{min}=\frac{1}{m}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)</span></span>，所以 <span><span data-tex="e
+          
+          
+           r
+          
+          
+           r
+          
+          
+           o
+          
+          
+           
+            r
+           
+           
+            
+             t
+            
+            
+             r
+            
+            
+             u
+            
+            
+             e
+            
+           
+          
+          
+           ≤
+          
+          
+           
+            ϵ
+           
+           
+            
+             m
+            
+            
+             i
+            
+            
+             n
+            
+           
+          
+          
+           =
+          
+          
+           
+            1
+           
+           
+            m
+           
+          
+          
+           (
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           H
+          
+          
+           ∣
+          
+          
+           +
+          
+          
+           l
+          
+          
+           n
+          
+          
+           (
+          
+          
+           
+            1
+           
+           
+            δ
+           
+          
+          
+           )
+          
+          
+           )
+          
+         
+         
+          error_{true}\leq \epsilon_{min}= \frac{1}{m}(ln\vert H\vert+ln(\frac{1}{\delta}))" data-display="false">e
+          
+          
+           r
+          
+          
+           r
+          
+          
+           o
+          
+          
+           
+            r
+           
+           
+            
+             t
+            
+            
+             r
+            
+            
+             u
+            
+            
+             e
+            
+           
+          
+          
+           ≤
+          
+          
+           
+            ϵ
+           
+           
+            
+             m
+            
+            
+             i
+            
+            
+             n
+            
+           
+          
+          
+           =
+          
+          
+           
+            1
+           
+           
+            m
+           
+          
+          
+           (
+          
+          
+           l
+          
+          
+           n
+          
+          
+           ∣
+          
+          
+           H
+          
+          
+           ∣
+          
+          
+           +
+          
+          
+           l
+          
+          
+           n
+          
+          
+           (
+          
+          
+           
+            1
+           
+           
+            δ
+           
+          
+          
+           )
+          
+          
+           )
+          
+         
+         
+          error_{true}\leq \epsilon_{min}= \frac{1}{m}(ln\vert H\vert+ln(\frac{1}{\delta}))</span></span></p>
+</blockquote> </li></ul>
+<h4><a></a>总结</h4>
+<p>PAC 要求：</p>
+<ul><li>泛化能力要求： 
+  <ul><li>置信大于等于 <span><span data-tex="1
+          
+          
+           −
+          
+          
+           δ
+          
+         
+         
+          1-\delta" data-display="false">1
+          
+          
+           −
+          
+          
+           δ
+          
+         
+         
+          1-\delta</span></span></li><li>误差小于 <span><span data-tex="ϵ
+          
+         
+         
+          \epsilon" data-display="false">ϵ
+          
+         
+         
+          \epsilon</span></span></li></ul> </li><li>计算效率保证：处理每一个样本的时间和所需要的样本数 <span><span data-tex="m
+        
+       
+       
+        m" data-display="false">m
+        
+       
+       
+        m</span></span> 为多项式级别</li></ul>
+<p>充分条件：</p>
+<ul><li>假设空间大小 <span><span data-tex="∣
+        
+        
+         H
+        
+        
+         ∣
+        
+       
+       
+        \vert H\vert" data-display="false">∣
+        
+        
+         H
+        
+        
+         ∣
+        
+       
+       
+        \vert H\vert</span></span> 是 <span><span data-tex="n
+        
+       
+       
+        n" data-display="false">n
+        
+       
+       
+        n</span></span> 的指数级</li><li>处理每个样本的时间是多项式级别</li><li>真实规律在假设空间中</li></ul>
+<h3><a></a>不可知学习 Agnostic Learning</h3>
+<p>不假设真实规律在假设空间中</p>
+<h4><a></a>核心定理</h4>
+<ul><li>样本数量下界 <span><span data-tex="m
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          
+           2
+          
+          
+           
+            ϵ
+           
+           
+            2
+           
+          
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         ∣
+        
+        
+         )
+        
+       
+       
+        m\geq \frac{1}{2\epsilon^2}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)" data-display="false">m
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          
+           2
+          
+          
+           
+            ϵ
+           
+           
+            2
+           
+          
+         
+        
+        
+         (
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         H
+        
+        
+         ∣
+        
+        
+         +
+        
+        
+         l
+        
+        
+         n
+        
+        
+         ∣
+        
+        
+         
+          1
+         
+         
+          δ
+         
+        
+        
+         ∣
+        
+        
+         )
+        
+       
+       
+        m\geq \frac{1}{2\epsilon^2}(ln\vert H\vert+ln\vert \frac{1}{\delta}\vert)</span></span><br/> 与 PAC 相比，精度提升一倍（<span><span data-tex="ε
+        
+        
+         →
+        
+        
+         
+          ε
+         
+         
+          2
+         
+        
+       
+       
+        \varepsilon \rightarrow \frac{\varepsilon}{2}" data-display="false">ε
+        
+        
+         →
+        
+        
+         
+          ε
+         
+         
+          2
+         
+        
+       
+       
+        \varepsilon \rightarrow \frac{\varepsilon}{2}</span></span>，样本数量变为原来的 4 倍）</li><li>训练误差和真实误差差距过大的概率 <span><span data-tex="P
+        
+        
+         r
+        
+        
+         [
+        
+        
+         e
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         
+          r
+         
+         
+          D
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         &gt;
+        
+        
+         e
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         
+          r
+         
+         
+          S
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         +
+        
+        
+         ε
+        
+        
+         ]
+        
+        
+         ≤
+        
+        
+         
+          e
+         
+         
+          
+           −
+          
+          
+           2
+          
+          
+           m
+          
+          
+           
+            ε
+           
+           
+            2
+           
+          
+         
+        
+       
+       
+        Pr[error_D(h)&gt;error_S(h)+\varepsilon]\leq e^{-2m\varepsilon^2}" data-display="false">P
+        
+        
+         r
+        
+        
+         [
+        
+        
+         e
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         
+          r
+         
+         
+          D
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         &gt;
+        
+        
+         e
+        
+        
+         r
+        
+        
+         r
+        
+        
+         o
+        
+        
+         
+          r
+         
+         
+          S
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         +
+        
+        
+         ε
+        
+        
+         ]
+        
+        
+         ≤
+        
+        
+         
+          e
+         
+         
+          
+           −
+          
+          
+           2
+          
+          
+           m
+          
+          
+           
+            ε
+           
+           
+            2
+           
+          
+         
+        
+       
+       
+        Pr[error_D(h)&gt;error_S(h)+\varepsilon]\leq e^{-2m\varepsilon^2}</span></span></li></ul>
+<h4><a></a>经验风险最小化 ERM（Empirical Risk Minimization）</h4>
+<p>选定假设空间 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span>，给定训练集 <span><span data-tex="S
+       
+      
+      
+       S" data-display="false">S
+       
+      
+      
+       S</span></span>，从 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 找出能很好拟合数据的模型 <span><span data-tex="h
+       
+      
+      
+       h" data-display="false">h
+       
+      
+      
+       h</span></span><br/> 泛化：对新数据用 <span><span data-tex="h
+       
+      
+      
+       h" data-display="false">h
+       
+      
+      
+       h</span></span> 去做预测<br/> <span><span><div data-tex="h
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         =
+        
+        
+         a
+        
+        
+         r
+        
+        
+         g
+        
+        
+         m
+        
+        
+         i
+        
+        
+         
+          n
+         
+         
+          
+           h
+          
+          
+           ∈
+          
+          
+           H
+          
+         
+        
+        
+         
+          
+           
+            
+             ϵ
+            
+           
+           
+            ∧
+           
+          
+         
+         
+          S
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+       
+       
+        \overset{\wedge}{h}=argmin_{h\in H}\overset{\wedge}{\epsilon}_S(h)" data-display="true">h
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         =
+        
+        
+         a
+        
+        
+         r
+        
+        
+         g
+        
+        
+         m
+        
+        
+         i
+        
+        
+         
+          n
+         
+         
+          
+           h
+          
+          
+           ∈
+          
+          
+           H
+          
+         
+        
+        
+         
+          
+           
+            
+             ϵ
+            
+           
+           
+            ∧
+           
+          
+         
+         
+          S
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+       
+       
+        \overset{\wedge}{h}=argmin_{h\in H}\overset{\wedge}{\epsilon}_S(h)</div></span></span><br/> 其中 <span><span data-tex="ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         S
+        
+       
+      
+      
+       \overset{\wedge}{\epsilon}_S" data-display="false">ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         S
+        
+       
+      
+      
+       \overset{\wedge}{\epsilon}_S</span></span> 是训练误差</p>
+<h4><a></a>误分类概率</h4>
+<p>将二分类看作伯努利分布，<span><span data-tex="Z
+       
+       
+        =
+       
+       
+        1
+       
+       
+        {
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ≠
+       
+       
+        c
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        }
+       
+      
+      
+       Z=1\{h_i(x)\neq c(x)\}" data-display="false">Z
+       
+       
+        =
+       
+       
+        1
+       
+       
+        {
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        ≠
+       
+       
+        c
+       
+       
+        (
+       
+       
+        x
+       
+       
+        )
+       
+       
+        }
+       
+      
+      
+       Z=1\{h_i(x)\neq c(x)\}</span></span>，模型犯错概率就等于伯努利变量 <span><span data-tex="Z
+       
+      
+      
+       Z" data-display="false">Z
+       
+      
+      
+       Z</span></span> 取值为 1 的概率<br/> 训练误差 <span><span data-tex="ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        =
+       
+       
+        
+         1
+        
+        
+         m
+        
+       
+       
+        
+         ∑
+        
+        
+         
+          j
+         
+         
+          =
+         
+         
+          1
+         
+        
+        
+         m
+        
+       
+       
+        
+         Z
+        
+        
+         j
+        
+       
+      
+      
+       \overset{\wedge}{\epsilon}(h_i)=\frac{1}{m}\sum_{j=1}^mZ_j" data-display="false">ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        =
+       
+       
+        
+         1
+        
+        
+         m
+        
+       
+       
+        
+         ∑
+        
+        
+         
+          j
+         
+         
+          =
+         
+         
+          1
+         
+        
+        
+         m
+        
+       
+       
+        
+         Z
+        
+        
+         j
+        
+       
+      
+      
+       \overset{\wedge}{\epsilon}(h_i)=\frac{1}{m}\sum_{j=1}^mZ_j</span></span><br/> 犯错概率的上界（霍夫丁不等式）：<span><span data-tex="P
+       
+       
+        (
+       
+       
+        ∣
+       
+       
+        ϵ
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        −
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        ∣
+       
+       
+        &gt;
+       
+       
+        γ
+       
+       
+        )
+       
+       
+        ≤
+       
+       
+        2
+       
+       
+        e
+       
+       
+        x
+       
+       
+        p
+       
+       
+        (
+       
+       
+        −
+       
+       
+        2
+       
+       
+        
+         γ
+        
+        
+         2
+        
+       
+       
+        m
+       
+       
+        )
+       
+      
+      
+       P(\vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert &gt;\gamma)\leq2exp(-2\gamma ^2m)" data-display="false">P
+       
+       
+        (
+       
+       
+        ∣
+       
+       
+        ϵ
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        −
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        ∣
+       
+       
+        &gt;
+       
+       
+        γ
+       
+       
+        )
+       
+       
+        ≤
+       
+       
+        2
+       
+       
+        e
+       
+       
+        x
+       
+       
+        p
+       
+       
+        (
+       
+       
+        −
+       
+       
+        2
+       
+       
+        
+         γ
+        
+        
+         2
+        
+       
+       
+        m
+       
+       
+        )
+       
+      
+      
+       P(\vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert &gt;\gamma)\leq2exp(-2\gamma ^2m)</span></span><br/> 所以训练误差趋近于真实误差</p>
+<h4><a></a>一致收敛</h4>
+<p>假设空间 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 中至少存在一个训练误差和真实误差差距过大的 <span><span data-tex="h
+       
+      
+      
+       h" data-display="false">h
+       
+      
+      
+       h</span></span> 的概率<br/> <span><span><div data-tex="P
+        
+        
+         (
+        
+        
+         ∃
+        
+        
+         h
+        
+        
+         ∈
+        
+        
+         H
+        
+        
+         ,
+        
+        
+         ∣
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         &gt;
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         =
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          1
+         
+        
+        
+         ∪
+        
+        
+         .
+        
+        
+         .
+        
+        
+         .
+        
+        
+         ∪
+        
+        
+         
+          A
+         
+         
+          k
+         
+        
+        
+         )
+        
+        
+         &lt;
+        
+        
+         
+          ∑
+         
+         
+          
+           i
+          
+          
+           =
+          
+          
+           1
+          
+         
+         
+          k
+         
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         =
+        
+        
+         
+          ∑
+         
+         
+          
+           i
+          
+          
+           =
+          
+          
+           1
+          
+         
+         
+          k
+         
+        
+        
+         2
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         m
+        
+        
+         )
+        
+        
+         =
+        
+        
+         2
+        
+        
+         k
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         m
+        
+        
+         )
+        
+       
+       
+        P(\exist h\in H, \vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert&gt;\gamma)=P(A_1\cup...\cup A_k) &lt;\sum_{i=1}^{k}P(A_i)=\sum_{i=1}^k2exp(-2\gamma^2m)=2kexp(-2\gamma^2m)" data-display="true">P
+        
+        
+         (
+        
+        
+         ∃
+        
+        
+         h
+        
+        
+         ∈
+        
+        
+         H
+        
+        
+         ,
+        
+        
+         ∣
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         &gt;
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         =
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          1
+         
+        
+        
+         ∪
+        
+        
+         .
+        
+        
+         .
+        
+        
+         .
+        
+        
+         ∪
+        
+        
+         
+          A
+         
+         
+          k
+         
+        
+        
+         )
+        
+        
+         &lt;
+        
+        
+         
+          ∑
+         
+         
+          
+           i
+          
+          
+           =
+          
+          
+           1
+          
+         
+         
+          k
+         
+        
+        
+         P
+        
+        
+         (
+        
+        
+         
+          A
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         =
+        
+        
+         
+          ∑
+         
+         
+          
+           i
+          
+          
+           =
+          
+          
+           1
+          
+         
+         
+          k
+         
+        
+        
+         2
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         m
+        
+        
+         )
+        
+        
+         =
+        
+        
+         2
+        
+        
+         k
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         m
+        
+        
+         )
+        
+       
+       
+        P(\exist h\in H, \vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert&gt;\gamma)=P(A_1\cup...\cup A_k) &lt;\sum_{i=1}^{k}P(A_i)=\sum_{i=1}^k2exp(-2\gamma^2m)=2kexp(-2\gamma^2m)</div></span></span><br/> 其中 <span><span data-tex="A
+        
+        
+         i
+        
+       
+      
+      
+       A_i" data-display="false">A
+        
+        
+         i
+        
+       
+      
+      
+       A_i</span></span> 表示第 i 个模型出问题</p>
+<p><strong>一致收敛定理</strong><br/> 所有模型表现都好的概率：<br/> <span><span><div data-tex="P
+        
+        
+         (
+        
+        
+         ¬
+        
+        
+         ∃
+        
+        
+         h
+        
+        
+         ∈
+        
+        
+         H
+        
+        
+         ,
+        
+        
+         ∣
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         &gt;
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         =
+        
+        
+         P
+        
+        
+         (
+        
+        
+         ∀
+        
+        
+         h
+        
+        
+         ∈
+        
+        
+         H
+        
+        
+         ,
+        
+        
+         ∣
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         ≤
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         =
+        
+        
+         1
+        
+        
+         −
+        
+        
+         2
+        
+        
+         k
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         m
+        
+        
+         )
+        
+       
+       
+        P(\neg \exist h\in H, \vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert&gt;\gamma)=P(\forall h\in H, \vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert \leq\gamma)=1-2kexp(-2\gamma^2m)" data-display="true">P
+        
+        
+         (
+        
+        
+         ¬
+        
+        
+         ∃
+        
+        
+         h
+        
+        
+         ∈
+        
+        
+         H
+        
+        
+         ,
+        
+        
+         ∣
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         &gt;
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         =
+        
+        
+         P
+        
+        
+         (
+        
+        
+         ∀
+        
+        
+         h
+        
+        
+         ∈
+        
+        
+         H
+        
+        
+         ,
+        
+        
+         ∣
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         −
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         
+          h
+         
+         
+          i
+         
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         ≤
+        
+        
+         γ
+        
+        
+         )
+        
+        
+         =
+        
+        
+         1
+        
+        
+         −
+        
+        
+         2
+        
+        
+         k
+        
+        
+         e
+        
+        
+         x
+        
+        
+         p
+        
+        
+         (
+        
+        
+         −
+        
+        
+         2
+        
+        
+         
+          γ
+         
+         
+          2
+         
+        
+        
+         m
+        
+        
+         )
+        
+       
+       
+        P(\neg \exist h\in H, \vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert&gt;\gamma)=P(\forall h\in H, \vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert \leq\gamma)=1-2kexp(-2\gamma^2m)</div></span></span></p>
+<p>设输出坏模型的概率 <span><span data-tex="δ
+       
+      
+      
+       \delta" data-display="false">δ
+       
+      
+      
+       \delta</span></span>，则 <span><span data-tex="δ
+       
+       
+        ≥
+       
+       
+        2
+       
+       
+        k
+       
+       
+        e
+       
+       
+        x
+       
+       
+        p
+       
+       
+        (
+       
+       
+        −
+       
+       
+        2
+       
+       
+        
+         γ
+        
+        
+         2
+        
+       
+       
+        m
+       
+       
+        )
+       
+      
+      
+       \delta \geq 2kexp(-2\gamma^2m)" data-display="false">δ
+       
+       
+        ≥
+       
+       
+        2
+       
+       
+        k
+       
+       
+        e
+       
+       
+        x
+       
+       
+        p
+       
+       
+        (
+       
+       
+        −
+       
+       
+        2
+       
+       
+        
+         γ
+        
+        
+         2
+        
+       
+       
+        m
+       
+       
+        )
+       
+      
+      
+       \delta \geq 2kexp(-2\gamma^2m)</span></span>（因为 <span><span data-tex="δ
+       
+      
+      
+       \delta" data-display="false">δ
+       
+      
+      
+       \delta</span></span> 一定要大于犯错概率的上界 <span><span data-tex="P
+       
+       
+        (
+       
+       
+        ∣
+       
+       
+        ϵ
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        −
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        ∣
+       
+       
+        &gt;
+       
+       
+        γ
+       
+       
+        )
+       
+      
+      
+       P(\vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert &gt;\gamma)" data-display="false">P
+       
+       
+        (
+       
+       
+        ∣
+       
+       
+        ϵ
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        −
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         h
+        
+        
+         i
+        
+       
+       
+        )
+       
+       
+        ∣
+       
+       
+        &gt;
+       
+       
+        γ
+       
+       
+        )
+       
+      
+      
+       P(\vert \epsilon(h_i)-\overset{\wedge}{\epsilon}(h_i)\vert &gt;\gamma)</span></span>）</p>
+<ul><li>样本复杂度 <span><span data-tex="m
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          
+           2
+          
+          
+           
+            γ
+           
+           
+            2
+           
+          
+         
+        
+        
+         l
+        
+        
+         o
+        
+        
+         g
+        
+        
+         
+          
+           2
+          
+          
+           k
+          
+         
+         
+          δ
+         
+        
+       
+       
+        m\geq \frac{1}{2\gamma^2} log\frac{2k}{\delta}" data-display="false">m
+        
+        
+         ≥
+        
+        
+         
+          1
+         
+         
+          
+           2
+          
+          
+           
+            γ
+           
+           
+            2
+           
+          
+         
+        
+        
+         l
+        
+        
+         o
+        
+        
+         g
+        
+        
+         
+          
+           2
+          
+          
+           k
+          
+         
+         
+          δ
+         
+        
+       
+       
+        m\geq \frac{1}{2\gamma^2} log\frac{2k}{\delta}</span></span><br/> 样本量只与假设空间大小 k 的对数成正比</li><li>泛化误差界 <span><span data-tex="γ
+        
+        
+         ≥
+        
+        
+         
+          
+           
+            1
+           
+           
+            
+             2
+            
+            
+             m
+            
+           
+          
+          
+           l
+          
+          
+           o
+          
+          
+           g
+          
+          
+           
+            
+             2
+            
+            
+             k
+            
+           
+           
+            δ
+           
+          
+         
+        
+       
+       
+        \gamma \geq \sqrt{\frac{1}{2m}log\frac{2k}{\delta}}" data-display="false">γ
+        
+        
+         ≥
+        
+        
+         
+          
+           
+            1
+           
+           
+            
+             2
+            
+            
+             m
+            
+           
+          
+          
+           l
+          
+          
+           o
+          
+          
+           g
+          
+          
+           
+            
+             2
+            
+            
+             k
+            
+           
+           
+            δ
+           
+          
+         
+        
+       
+       
+        \gamma \geq \sqrt{\frac{1}{2m}log\frac{2k}{\delta}}</span></span><br/> 所以训练误差和真实误差的差距 <span><span data-tex="∣
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         −
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         ≤
+        
+        
+         
+          
+           
+            1
+           
+           
+            
+             2
+            
+            
+             m
+            
+           
+          
+          
+           l
+          
+          
+           o
+          
+          
+           g
+          
+          
+           
+            
+             2
+            
+            
+             k
+            
+           
+           
+            δ
+           
+          
+         
+        
+       
+       
+        \vert \overset{\wedge}{\epsilon}(h)-\epsilon(h)\vert\leq\sqrt{\frac{1}{2m}log\frac{2k}{\delta}}" data-display="false">∣
+        
+        
+         
+          
+           
+            ϵ
+           
+          
+          
+           ∧
+          
+         
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         −
+        
+        
+         ϵ
+        
+        
+         (
+        
+        
+         h
+        
+        
+         )
+        
+        
+         ∣
+        
+        
+         ≤
+        
+        
+         
+          
+           
+            1
+           
+           
+            
+             2
+            
+            
+             m
+            
+           
+          
+          
+           l
+          
+          
+           o
+          
+          
+           g
+          
+          
+           
+            
+             2
+            
+            
+             k
+            
+           
+           
+            δ
+           
+          
+         
+        
+       
+       
+        \vert \overset{\wedge}{\epsilon}(h)-\epsilon(h)\vert\leq\sqrt{\frac{1}{2m}log\frac{2k}{\delta}}</span></span></li></ul>
+<p>由 <span><span data-tex="ϵ
+       
+       
+        (
+       
+       
+        
+         
+          
+           h
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        ≤
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         
+          
+           h
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        γ
+       
+       
+        ≤
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         
+          
+           
+            h
+           
+           
+            ∗
+           
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        γ
+       
+       
+        ≤
+       
+       
+        ϵ
+       
+       
+        (
+       
+       
+        
+         
+          
+           
+            h
+           
+           
+            ∗
+           
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        2
+       
+       
+        γ
+       
+      
+      
+       \epsilon(\overset{\wedge}{h})\leq\overset{\wedge}{\epsilon}(\overset{\wedge}{h})+\gamma\leq\overset{\wedge}{\epsilon}(\overset{\wedge}{h^*})+\gamma\leq\epsilon(\overset{\wedge}{h^*})+2\gamma" data-display="false">ϵ
+       
+       
+        (
+       
+       
+        
+         
+          
+           h
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        ≤
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         
+          
+           h
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        γ
+       
+       
+        ≤
+       
+       
+        
+         
+          
+           ϵ
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        (
+       
+       
+        
+         
+          
+           
+            h
+           
+           
+            ∗
+           
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        γ
+       
+       
+        ≤
+       
+       
+        ϵ
+       
+       
+        (
+       
+       
+        
+         
+          
+           
+            h
+           
+           
+            ∗
+           
+          
+         
+         
+          ∧
+         
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        2
+       
+       
+        γ
+       
+      
+      
+       \epsilon(\overset{\wedge}{h})\leq\overset{\wedge}{\epsilon}(\overset{\wedge}{h})+\gamma\leq\overset{\wedge}{\epsilon}(\overset{\wedge}{h^*})+\gamma\leq\epsilon(\overset{\wedge}{h^*})+2\gamma</span></span><br/> 可知ERM得到的最优真实误差和假设空间的最优真实误差顶多差 <span><span data-tex="2
+       
+       
+        γ
+       
+      
+      
+       2\gamma" data-display="false">2
+       
+       
+        γ
+       
+      
+      
+       2\gamma</span></span></p>
+<h3><a></a>VC维（Vapnik-Chervonenkis Dimension）</h3>
+<p>用于解决假设空间 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 大小无限的情况</p>
+<p><strong>打散Shatter</strong>：假设数据集 <span><span data-tex="S
+       
+      
+      
+       S" data-display="false">S
+       
+      
+      
+       S</span></span> 有 <span><span data-tex="d
+       
+      
+      
+       d" data-display="false">d
+       
+      
+      
+       d</span></span> 个数据，二分类有 <span><span data-tex="2
+        
+        
+         d
+        
+       
+      
+      
+       2^d" data-display="false">2
+        
+        
+         d
+        
+       
+      
+      
+       2^d</span></span> 个组合，假设空间 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 中的模型可以得出所有可能的分类结果，就叫 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 可以打散 <span><span data-tex="S
+       
+      
+      
+       S" data-display="false">S
+       
+      
+      
+       S</span></span></p>
+<p><strong>VC维</strong>：假设空间 <span><span data-tex="H
+       
+      
+      
+       H" data-display="false">H
+       
+      
+      
+       H</span></span> 可以打散的最大点集的规模<br/> 不是要打散所有大小为 n 的点集，是只要存在有 n 个点的分布可以被打散即可</p>
+<ul><li>n 维空间的 m 个点，选一个当原点，m 个点能被有向超平面打散，当且仅当剩下的 m-1 个点线性无关</li><li>n 维空间的所有有向超平面组成的假设空间 <span><span data-tex="V
+        
+        
+         C
+        
+        
+         =
+        
+        
+         n
+        
+        
+         +
+        
+        
+         1
+        
+       
+       
+        VC=n+1" data-display="false">V
+        
+        
+         C
+        
+        
+         =
+        
+        
+         n
+        
+        
+         +
+        
+        
+         1
+        
+       
+       
+        VC=n+1</span></span></li></ul>
+<p>并非参数数量越多，VC维就越大<br/> <span><span data-tex="f
+       
+       
+        (
+       
+       
+        x
+       
+       
+        ,
+       
+       
+        α
+       
+       
+        )
+       
+       
+        ≡
+       
+       
+        θ
+       
+       
+        (
+       
+       
+        s
+       
+       
+        i
+       
+       
+        n
+       
+       
+        (
+       
+       
+        α
+       
+       
+        x
+       
+       
+        )
+       
+       
+        )
+       
+      
+      
+       f(x,\alpha)\equiv \theta(sin(\alpha x))" data-display="false">f
+       
+       
+        (
+       
+       
+        x
+       
+       
+        ,
+       
+       
+        α
+       
+       
+        )
+       
+       
+        ≡
+       
+       
+        θ
+       
+       
+        (
+       
+       
+        s
+       
+       
+        i
+       
+       
+        n
+       
+       
+        (
+       
+       
+        α
+       
+       
+        x
+       
+       
+        )
+       
+       
+        )
+       
+      
+      
+       f(x,\alpha)\equiv \theta(sin(\alpha x))</span></span>，只有一个参数 <span><span data-tex="α
+       
+      
+      
+       \alpha" data-display="false">α
+       
+      
+      
+       \alpha</span></span> ，VC维等于 <span><span data-tex="∞
+       
+      
+      
+       \infty" data-display="false">∞
+       
+      
+      
+       \infty</span></span></p>
+<p><strong>基于VC维的样本复杂度</strong><br/> <span><span data-tex="m
+       
+       
+        ≥
+       
+       
+        
+         1
+        
+        
+         ε
+        
+       
+       
+        (
+       
+       
+        4
+       
+       
+        l
+       
+       
+        o
+       
+       
+        
+         g
+        
+        
+         2
+        
+       
+       
+        (
+       
+       
+        
+         2
+        
+        
+         δ
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        8
+       
+       
+        V
+       
+       
+        C
+       
+       
+        (
+       
+       
+        H
+       
+       
+        )
+       
+       
+        l
+       
+       
+        o
+       
+       
+        
+         g
+        
+        
+         2
+        
+       
+       
+        (
+       
+       
+        
+         13
+        
+        
+         ε
+        
+       
+       
+        )
+       
+       
+        )
+       
+      
+      
+       m\geq \frac{1}{\varepsilon}(4log_2(\frac{2}{\delta})+8VC(H)log_2(\frac{13}{\varepsilon}))" data-display="false">m
+       
+       
+        ≥
+       
+       
+        
+         1
+        
+        
+         ε
+        
+       
+       
+        (
+       
+       
+        4
+       
+       
+        l
+       
+       
+        o
+       
+       
+        
+         g
+        
+        
+         2
+        
+       
+       
+        (
+       
+       
+        
+         2
+        
+        
+         δ
+        
+       
+       
+        )
+       
+       
+        +
+       
+       
+        8
+       
+       
+        V
+       
+       
+        C
+       
+       
+        (
+       
+       
+        H
+       
+       
+        )
+       
+       
+        l
+       
+       
+        o
+       
+       
+        
+         g
+        
+        
+         2
+        
+       
+       
+        (
+       
+       
+        
+         13
+        
+        
+         ε
+        
+       
+       
+        )
+       
+       
+        )
+       
+      
+      
+       m\geq \frac{1}{\varepsilon}(4log_2(\frac{2}{\delta})+8VC(H)log_2(\frac{13}{\varepsilon}))</span></span></p>
+</div>
+</main>
+</body>
+</html>

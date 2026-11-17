@@ -1,3 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap");
+@import "//at.alicdn.com/t/font_2264842_b004iy0kk2b.css";
+
+@font-face {
+  font-family: "DuanNing Handwriting";
+  src: url("../font/DuanNingMaoBiXingShuWanZhengBan-2.ttf") format("truetype");
+  font-display: swap;
+}
+
+#nav .site-name,
+#page-header.full_page #site-title {
+  font-family: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  font-weight: 400;
+}
+
+#nav .site-name {
+  font-size: 1.65em;
+  line-height: 1;
+}
+
+#page-header.full_page #site-title {
+  font-size: clamp(3.5rem, 10vw, 6.5rem);
+  line-height: 1.1;
+  text-transform: none;
+  text-shadow: 0 2px 14px rgba(16, 52, 77, .5);
+}
+
+#page-header.full_page #site-subtitle {
+  font-family: "DuanNing Handwriting", "KaiTi", cursive;
+  font-size: clamp(1.1rem, 3vw, 1.55rem);
+  font-weight: 400;
+}
+
+#page-header.full_page {
+  background-position: center;
+}
+
+#page-header.full_page #site-info,
+#page-header.full_page #scroll-down {
+  z-index: 1;
+}
+
 .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
   left: -66px !important;
   /* 默认情况下缩进左侧66px，只留一点箭头部分 */

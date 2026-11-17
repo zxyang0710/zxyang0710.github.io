@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2024年四川省大学生程序设计竞赛 补题记录 · zxyang</title>
+<link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/article.css">
+
+</head>
+<body>
+<main class="reading">
+<a href="../">← 返回 Blog</a>
+<h1>2024年四川省大学生程序设计竞赛 补题记录</h1>
+<time datetime="2024-10-28T22:23:31+08:00">2024-10-28</time>
+<div class="prose">
+
+<p></p>
+<div>
+<h4>文章目录</h4>
+<ul><li><ul><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544#Problem_A__2">Problem A. 逆序对染色（思维+树状数组）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544#Problem_B__81">Problem B. 连接召唤（贪心）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544#Problem_E_L__196">Problem E. L 型覆盖检查器（模拟）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544#Problem_F__290">Problem F. 小球进洞：平面版（几何）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544#Problem_G__472">Problem G. 函数查询（二分+字典树）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544#Problem_H_GG__YY__614">Problem H. GG 和 YY 的石子游戏（签到）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/143311544#Problem_L__639">Problem L. 毛肚下清汤？（签到）</a></li></ul>
+</li></ul>
+</div>
+<p></p>
+<h3><a></a>Problem A. 逆序对染色（思维+树状数组）</h3>
+<ul><li>难似我了<br/> <img alt="在这里插入图片描述" loading="lazy" referrerpolicy="no-referrer" src="https://i-blog.csdnimg.cn/direct/943a41936a7c49aa888acf099a81645f.png"/></li></ul>
+<pre><code><span><span>#</span><span>include</span> <span>&lt;bits/stdc++.h&gt;</span></span>
+
+<span>using</span> <span>namespace</span> std<span>;</span>
+
+<span><span>#</span><span>define</span> <span>int</span> <span><span>long</span> <span>long</span></span></span>
+
+<span>struct</span> <span>BIT</span>
+<span>{<!-- --></span>
+	<span>const</span> <span>int</span> n<span>;</span>
+	vector<span>&lt;</span><span>int</span><span>&gt;</span> tree<span>;</span>
+	<span>BIT</span><span>(</span><span>int</span> n<span>)</span> <span>:</span> <span>n</span><span>(</span>n<span>)</span><span>,</span> <span>tree</span><span>(</span>n <span>+</span> <span>1</span><span>)</span> <span>{<!-- --></span><span>}</span><span>;</span>
+	<span>// 询问前x个数的和</span>
+	<span>int</span> <span>Query</span><span>(</span><span>int</span> x<span>)</span>
+	<span>{<!-- --></span>
+		<span>int</span> res <span>=</span> <span>0</span><span>;</span>
+		<span>for</span> <span>(</span><span>int</span> i <span>=</span> x<span>;</span> i <span>&gt;</span> <span>0</span><span>;</span> i <span>-=</span> <span>(</span>i <span>&amp;</span> <span>-</span>i<span>)</span><span>)</span> res <span>+=</span> tree<span>[</span>i<span>]</span><span>;</span>
+		<span>return</span> res<span>;</span>
+	<span>}</span>
+	<span>// 第l个位置+z</span>
+	<span>void</span> <span>Modify</span><span>(</span><span>int</span> l<span>,</span> <span>int</span> z<span>)</span>
+	<span>{<!-- --></span>
+		<span>if</span> <span>(</span>l <span>&lt;=</span> <span>0</span><span>)</span> <span>return</span><span>;</span>
+		<span>for</span> <span>(</span><span>int</span> i <span>=</span> l<span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>+=</span> <span>(</span>i <span>&amp;</span> <span>-</span>i<span>)</span><span>)</span> tree<span>[</span>i<span>]</span> <span>+=</span> z<span>;</span>
+	<span>}</span>
+	<span>// 区间求和</span>
+	<span>int</span> <span>rangeQuery</span><span>(</span><span>int</span> l<span>,</span> <span>int</span> r<span>)</span>
+	<span>{<!-- --></span>
+		<span>return</span> <span>Query</span><span>(</span><span>min</span><span>(</span>n<span>,</span> r<span>)</span><span>)</span> <span>-</span> <span>Query</span><span>(</span><span>max</span><span>(</span><span>0ll</span><span>,</span> l <span>-</span> <span>1</span><span>)</span><span>)</span><span>;</span>
+	<span>}</span>
+<span>}</span><span>;</span>
+
+<span>void</span> <span>solve</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    <span>int</span> n<span>;</span> cin <span>&gt;&gt;</span> n<span>;</span>
+    vector<span>&lt;</span><span>int</span><span>&gt;</span> <span>a</span><span>(</span>n <span>+</span> <span>1</span><span>)</span><span>,</span> <span>pos</span><span>(</span>n <span>+</span> <span>1</span><span>)</span><span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+    <span>{<!-- --></span>
+        cin <span>&gt;&gt;</span> a<span>[</span>i<span>]</span><span>;</span>
+        pos<span>[</span>a<span>[</span>i<span>]</span><span>]</span> <span>=</span> i<span>;</span>
+    <span>}</span>
+    vector<span>&lt;</span>vector<span>&lt;</span><span>int</span><span>&gt;&gt;</span> <span>mem</span><span>(</span>n <span>+</span> <span>1</span><span>)</span><span>;</span>
+    vector<span>&lt;</span><span>bool</span><span>&gt;</span> <span>st</span><span>(</span>n <span>+</span> <span>1</span><span>)</span><span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> t <span>=</span> pos<span>[</span>a<span>[</span>i<span>]</span> <span>-</span> <span>1</span><span>]</span> <span>+</span> <span>1</span><span>;</span>
+        <span>if</span> <span>(</span>i <span>&gt;=</span> t<span>)</span>
+        <span>{<!-- --></span>
+            mem<span>[</span>t<span>]</span><span>.</span><span>push_back</span><span>(</span>i<span>)</span><span>;</span>
+            st<span>[</span>a<span>[</span>i<span>]</span><span>]</span> <span>=</span> <span>true</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+    BIT <span>bit</span><span>(</span>n<span>)</span><span>;</span>
+    <span>int</span> ans <span>=</span> <span>0</span><span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>for</span> <span>(</span><span>auto</span> t <span>:</span> mem<span>[</span>i<span>]</span><span>)</span> bit<span>.</span><span>Modify</span><span>(</span>a<span>[</span>t<span>]</span><span>,</span> <span>1</span><span>)</span><span>;</span>
+        <span>if</span> <span>(</span>st<span>[</span>a<span>[</span>i<span>]</span><span>]</span><span>)</span> bit<span>.</span><span>Modify</span><span>(</span>a<span>[</span>i<span>]</span><span>,</span> <span>-</span><span>1</span><span>)</span><span>;</span>
+        <span>if</span> <span>(</span>a<span>[</span>i <span>-</span> <span>1</span><span>]</span> <span>+</span> <span>1</span> <span>&lt;=</span> a<span>[</span>i<span>]</span> <span>-</span> <span>1</span><span>)</span> ans <span>+=</span> bit<span>.</span><span>rangeQuery</span><span>(</span>a<span>[</span>i <span>-</span> <span>1</span><span>]</span> <span>+</span> <span>1</span><span>,</span> a<span>[</span>i<span>]</span> <span>-</span> <span>1</span><span>)</span><span>;</span>
+    <span>}</span>
+    cout <span>&lt;&lt;</span> ans <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+<span>}</span>
+
+<span>signed</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    ios<span>::</span><span>sync_with_stdio</span><span>(</span><span>false</span><span>)</span><span>;</span>
+    cin<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>,</span> cout<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>;</span>
+    
+    <span>int</span> t <span>=</span> <span>1</span><span>;</span>
+    <span>// cin &gt;&gt; t;</span>
+    <span>while</span> <span>(</span>t <span>--</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>solve</span><span>(</span><span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+</code></pre>
+<h3><a></a>Problem B. 连接召唤（贪心）</h3>
+<ul><li>贪心，优先1-5,2-4,3-3匹配，我的代码里单独考虑了出现23的情况，题解好像简单一些，但是能a的代码就是好代码 我就不重写了（</li></ul>
+<pre><code><span><span>#</span><span>include</span> <span>&lt;bits/stdc++.h&gt;</span></span>
+
+<span>using</span> <span>namespace</span> std<span>;</span>
+
+<span><span>#</span><span>define</span> <span>int</span> <span><span>long</span> <span>long</span></span></span>
+
+<span>typedef</span> pair<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;</span> PII<span>;</span>
+
+<span>void</span> <span>solve</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    vector<span>&lt;</span><span>int</span><span>&gt;</span> <span>cnt</span><span>(</span><span>6</span><span>)</span><span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> <span>5</span><span>;</span> i <span>++</span> <span>)</span> cin <span>&gt;&gt;</span> cnt<span>[</span>i<span>]</span><span>;</span>
+    <span>int</span> ans <span>=</span> <span>0</span><span>;</span>
+    <span>int</span> minn <span>=</span> <span>min</span><span>(</span>cnt<span>[</span><span>1</span><span>]</span><span>,</span> cnt<span>[</span><span>5</span><span>]</span><span>)</span><span>;</span>
+    ans <span>+=</span> minn<span>;</span>
+    cnt<span>[</span><span>1</span><span>]</span> <span>-=</span> minn<span>;</span> cnt<span>[</span><span>5</span><span>]</span> <span>-=</span> minn<span>;</span>
+    minn <span>=</span> <span>min</span><span>(</span>cnt<span>[</span><span>2</span><span>]</span><span>,</span> cnt<span>[</span><span>4</span><span>]</span><span>)</span><span>;</span>
+    ans <span>+=</span> minn<span>;</span>
+    cnt<span>[</span><span>2</span><span>]</span> <span>-=</span> minn<span>;</span> cnt<span>[</span><span>4</span><span>]</span> <span>-=</span> minn<span>;</span>
+    ans <span>+=</span> cnt<span>[</span><span>3</span><span>]</span> <span>/</span> <span>2</span><span>;</span>
+    cnt<span>[</span><span>3</span><span>]</span> <span>%=</span> <span>2</span><span>;</span>
+
+    <span>auto</span> cal <span>=</span> <span>[</span><span>&amp;</span><span>]</span><span>(</span><span>int</span> id<span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> need <span>=</span> <span>6</span> <span>-</span> id<span>;</span>
+        <span>int</span> nw <span>=</span> <span>0</span><span>;</span>
+        <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;</span> id<span>;</span> i <span>++</span> <span>)</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span><span>!</span>cnt<span>[</span>i<span>]</span><span>)</span> <span>continue</span><span>;</span>
+            <span>int</span> minn <span>=</span> <span>min</span><span>(</span><span>(</span>nw <span>+</span> cnt<span>[</span>i<span>]</span><span>)</span> <span>/</span> need<span>,</span> cnt<span>[</span>id<span>]</span><span>)</span><span>;</span>
+            cnt<span>[</span>i<span>]</span> <span>-=</span> <span>(</span>minn <span>*</span> need <span>-</span> nw<span>)</span><span>;</span> cnt<span>[</span>id<span>]</span> <span>-=</span> minn<span>;</span> 
+            <span>for</span> <span>(</span><span>int</span> j <span>=</span> <span>1</span><span>;</span> j <span>&lt;</span> i<span>;</span> j <span>++</span> <span>)</span> cnt<span>[</span>j<span>]</span> <span>=</span> <span>0</span><span>;</span>
+            ans <span>+=</span> minn<span>;</span>
+            nw <span>=</span> cnt<span>[</span>i<span>]</span><span>;</span>
+        <span>}</span>
+        <span>if</span> <span>(</span>nw <span>!=</span> <span>0</span> <span>&amp;&amp;</span> cnt<span>[</span>id<span>]</span><span>)</span>
+        <span>{<!-- --></span>
+            <span>int</span> need <span>=</span> <span>6</span> <span>-</span> nw<span>;</span>
+            <span>int</span> c <span>=</span> need <span>/</span> id<span>;</span>
+            <span>if</span> <span>(</span>cnt<span>[</span>id<span>]</span> <span>&gt;=</span> c<span>)</span>
+            <span>{<!-- --></span>
+                need <span>-=</span> c <span>*</span> id<span>;</span>
+                <span>if</span> <span>(</span>need <span>==</span> <span>0</span><span>)</span>
+                <span>{<!-- --></span>
+                    cnt<span>[</span>id<span>]</span> <span>-=</span> c<span>;</span>
+                    ans <span>++</span> <span>;</span>
+                    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;</span> id<span>;</span> i <span>++</span> <span>)</span> cnt<span>[</span>i<span>]</span> <span>=</span> <span>0</span><span>;</span>
+                <span>}</span>
+                <span>else</span>
+                <span>{<!-- --></span>
+                    <span>if</span> <span>(</span>cnt<span>[</span>id<span>]</span> <span>&gt;=</span> need<span>)</span>
+                    <span>{<!-- --></span>
+                        cnt<span>[</span>id<span>]</span> <span>-=</span> need<span>;</span>
+                        ans <span>++</span> <span>;</span>
+                        <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;</span> id<span>;</span> i <span>++</span> <span>)</span> cnt<span>[</span>i<span>]</span> <span>=</span> <span>0</span><span>;</span>
+                    <span>}</span>
+                <span>}</span>
+            <span>}</span>
+        <span>}</span>
+        <span>if</span> <span>(</span>id <span>==</span> <span>5</span><span>)</span> ans <span>+=</span> cnt<span>[</span>id<span>]</span> <span>/</span> <span>2</span><span>;</span>
+        <span>else</span> <span>if</span> <span>(</span>id <span>==</span> <span>4</span> <span>||</span> id <span>==</span> <span>2</span><span>)</span> ans <span>+=</span> cnt<span>[</span>id<span>]</span> <span>/</span> <span>3</span><span>;</span>
+        <span>else</span> <span>if</span> <span>(</span>id <span>==</span> <span>1</span><span>)</span> ans <span>+=</span> cnt<span>[</span>id<span>]</span> <span>/</span> <span>6</span><span>;</span>
+        cnt<span>[</span>id<span>]</span> <span>=</span> <span>0</span><span>;</span>
+    <span>}</span><span>;</span>
+
+    <span>if</span> <span>(</span>cnt<span>[</span><span>1</span><span>]</span> <span>&amp;&amp;</span> cnt<span>[</span><span>2</span><span>]</span> <span>&amp;&amp;</span> cnt<span>[</span><span>3</span><span>]</span><span>)</span>
+    <span>{<!-- --></span>
+        cnt<span>[</span><span>1</span><span>]</span> <span>-=</span> <span>1</span><span>;</span> cnt<span>[</span><span>2</span><span>]</span> <span>-=</span> <span>1</span><span>;</span> cnt<span>[</span><span>3</span><span>]</span> <span>-=</span> <span>1</span><span>;</span>
+        ans <span>++</span> <span>;</span>
+        <span>if</span> <span>(</span>cnt<span>[</span><span>2</span><span>]</span><span>)</span> <span>cal</span><span>(</span><span>2</span><span>)</span><span>;</span>
+        <span>if</span> <span>(</span>cnt<span>[</span><span>1</span><span>]</span><span>)</span> <span>cal</span><span>(</span><span>1</span><span>)</span><span>;</span>
+    <span>}</span>
+    <span>else</span> <span>if</span> <span>(</span>cnt<span>[</span><span>2</span><span>]</span> <span>&amp;&amp;</span> cnt<span>[</span><span>3</span><span>]</span> <span>&amp;&amp;</span> cnt<span>[</span><span>5</span><span>]</span><span>)</span>
+    <span>{<!-- --></span>
+        cnt<span>[</span><span>5</span><span>]</span> <span>--</span> <span>;</span> cnt<span>[</span><span>3</span><span>]</span> <span>--</span> <span>;</span>
+        ans <span>++</span> <span>;</span>
+        <span>if</span> <span>(</span>cnt<span>[</span><span>5</span><span>]</span><span>)</span> <span>cal</span><span>(</span><span>5</span><span>)</span><span>;</span>
+        <span>if</span> <span>(</span>cnt<span>[</span><span>2</span><span>]</span><span>)</span> <span>cal</span><span>(</span><span>2</span><span>)</span><span>;</span>
+    <span>}</span>
+    <span>else</span> <span>if</span> <span>(</span>cnt<span>[</span><span>2</span><span>]</span> <span>&amp;&amp;</span> cnt<span>[</span><span>3</span><span>]</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>cnt<span>[</span><span>2</span><span>]</span> <span>&gt;=</span> <span>2</span><span>)</span>
+        <span>{<!-- --></span>
+            cnt<span>[</span><span>2</span><span>]</span> <span>-=</span> <span>2</span><span>;</span> cnt<span>[</span><span>3</span><span>]</span> <span>--</span> <span>;</span>
+            ans <span>++</span> <span>;</span>
+        <span>}</span>
+        <span>if</span> <span>(</span>cnt<span>[</span><span>2</span><span>]</span><span>)</span> <span>cal</span><span>(</span><span>2</span><span>)</span><span>;</span>
+    <span>}</span>
+    <span>else</span>
+    <span>{<!-- --></span>
+        <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>5</span><span>;</span> i <span>&gt;=</span> <span>1</span><span>;</span> i <span>--</span> <span>)</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span>cnt<span>[</span>i<span>]</span><span>)</span> <span>cal</span><span>(</span>i<span>)</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+    cout <span>&lt;&lt;</span> ans <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+<span>}</span>
+
+<span>signed</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    ios<span>::</span><span>sync_with_stdio</span><span>(</span><span>false</span><span>)</span><span>;</span>
+    cin<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>,</span> cout<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>;</span>
+    
+    <span>int</span> t <span>=</span> <span>1</span><span>;</span>
+    cin <span>&gt;&gt;</span> t<span>;</span>
+    <span>while</span> <span>(</span>t <span>--</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>solve</span><span>(</span><span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+</code></pre>
+<h3><a></a>Problem E. L 型覆盖检查器（模拟）</h3>
+<pre><code><span><span>#</span><span>include</span> <span>&lt;bits/stdc++.h&gt;</span></span>
+<span>using</span> <span>namespace</span> std<span>;</span>
+<span><span>#</span><span>define</span> <span>int</span> <span><span>long</span> <span>long</span></span></span>
+
+string g<span>[</span><span>510</span><span>]</span><span>;</span>
+pair<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;</span> dx<span>[</span><span>]</span> <span>=</span> <span>{<!-- --></span><span>{<!-- --></span><span>-</span><span>1</span><span>,</span> <span>0</span><span>}</span><span>,</span> <span>{<!-- --></span><span>0</span><span>,</span> <span>1</span><span>}</span><span>,</span> <span>{<!-- --></span><span>0</span><span>,</span> <span>-</span><span>1</span><span>}</span><span>,</span> <span>{<!-- --></span><span>-</span><span>1</span><span>,</span> <span>0</span><span>}</span><span>}</span><span>;</span>
+pair<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;</span> dy<span>[</span><span>]</span> <span>=</span> <span>{<!-- --></span><span>{<!-- --></span><span>0</span><span>,</span><span>1</span><span>}</span><span>,</span> <span>{<!-- --></span><span>1</span><span>,</span><span>0</span><span>}</span><span>,</span> <span>{<!-- --></span><span>1</span><span>,</span><span>0</span><span>}</span><span>,</span> <span>{<!-- --></span><span>0</span><span>,</span><span>-</span><span>1</span><span>}</span><span>}</span><span>;</span>
+<span>char</span> fx<span>[</span><span>]</span> <span>=</span> <span>{<!-- --></span><span>'D'</span><span>,</span> <span>'L'</span><span>,</span> <span>'R'</span><span>,</span> <span>'D'</span><span>}</span><span>;</span>
+<span>char</span> fy<span>[</span><span>]</span> <span>=</span> <span>{<!-- --></span><span>'L'</span><span>,</span> <span>'U'</span><span>,</span> <span>'U'</span><span>,</span> <span>'R'</span><span>}</span><span>;</span>
+
+<span>void</span> <span>solve</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    <span>int</span> n<span>,</span> m<span>;</span>
+    cin <span>&gt;&gt;</span> n <span>&gt;&gt;</span> m<span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i<span>++</span><span>)</span> <span>{<!-- --></span>
+        cin <span>&gt;&gt;</span> g<span>[</span>i<span>]</span><span>;</span>
+        g<span>[</span>i<span>]</span> <span>=</span> <span>" "</span> <span>+</span> g<span>[</span>i<span>]</span><span>;</span>
+    <span>}</span>
+
+    <span>if</span> <span>(</span>g<span>[</span><span>1</span><span>]</span><span>[</span>m<span>]</span> <span>!=</span> <span>'.'</span><span>)</span> <span>{<!-- --></span>
+        cout <span>&lt;&lt;</span> <span>"No"</span> <span>&lt;&lt;</span> endl<span>;</span>
+        <span>return</span><span>;</span>
+    <span>}</span>
+
+    vector<span>&lt;</span>pair<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;&gt;</span> cc<span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i<span>++</span><span>)</span> <span>{<!-- --></span>
+        <span>for</span> <span>(</span><span>int</span> j <span>=</span> <span>1</span><span>;</span> j <span>&lt;=</span> m<span>;</span> j<span>++</span><span>)</span> <span>{<!-- --></span>
+            <span>if</span> <span>(</span>g<span>[</span>i<span>]</span><span>[</span>j<span>]</span> <span>==</span> <span>'C'</span><span>)</span>
+                cc<span>.</span><span>push_back</span><span>(</span><span>{<!-- --></span>i<span>,</span> j<span>}</span><span>)</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+
+    vector<span>&lt;</span>vector<span>&lt;</span><span>int</span><span>&gt;&gt;</span> <span>st</span><span>(</span>n <span>+</span> <span>1</span><span>,</span> vector<span>&lt;</span><span>int</span><span>&gt;</span><span>(</span>m <span>+</span> <span>1</span><span>,</span> <span>0</span><span>)</span><span>)</span><span>;</span>
+
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>0</span><span>;</span> i <span>&lt;</span> cc<span>.</span><span>size</span><span>(</span><span>)</span><span>;</span> i<span>++</span><span>)</span> <span>{<!-- --></span>
+        <span>int</span> a <span>=</span> cc<span>[</span>i<span>]</span><span>.</span>x<span>,</span> b <span>=</span> cc<span>[</span>i<span>]</span><span>.</span>y<span>;</span>
+
+        st<span>[</span>a<span>]</span><span>[</span>b<span>]</span> <span>=</span> i <span>+</span> <span>1</span><span>;</span>
+        <span>for</span> <span>(</span><span>int</span> j <span>=</span> <span>0</span><span>;</span> j <span>&lt;</span> <span>4</span><span>;</span> j<span>++</span><span>)</span> <span>{<!-- --></span>
+            <span>int</span> x1 <span>=</span> a <span>+</span> dx<span>[</span>j<span>]</span><span>.</span>x<span>,</span> y1 <span>=</span> b <span>+</span> dx<span>[</span>j<span>]</span><span>.</span>y<span>;</span>
+            <span>int</span> x2 <span>=</span> a <span>+</span> dy<span>[</span>j<span>]</span><span>.</span>x<span>,</span> y2 <span>=</span> b <span>+</span> dy<span>[</span>j<span>]</span><span>.</span>y<span>;</span>
+
+            <span>if</span> <span>(</span>x1 <span>&lt;</span> <span>1</span> <span>||</span> x1 <span>&gt;</span> n <span>||</span> x2 <span>&lt;</span> <span>1</span> <span>||</span> x2 <span>&gt;</span> n<span>)</span>
+                <span>continue</span><span>;</span>
+            <span>if</span> <span>(</span>y1 <span>&lt;</span> <span>1</span> <span>||</span> y1 <span>&gt;</span> m <span>||</span> y2 <span>&lt;</span> <span>1</span> <span>||</span> y2 <span>&gt;</span> m<span>)</span>
+                <span>continue</span><span>;</span>
+
+            <span>if</span> <span>(</span>st<span>[</span>x1<span>]</span><span>[</span>y1<span>]</span> <span>!=</span> <span>0</span><span>)</span> <span>continue</span><span>;</span>
+            <span>if</span> <span>(</span>st<span>[</span>x2<span>]</span><span>[</span>y2<span>]</span> <span>!=</span> <span>0</span><span>)</span> <span>continue</span><span>;</span>
+ 
+            <span>if</span> <span>(</span>g<span>[</span>x1<span>]</span><span>[</span>y1<span>]</span> <span>==</span> fx<span>[</span>j<span>]</span> <span>&amp;&amp;</span> g<span>[</span>x2<span>]</span><span>[</span>y2<span>]</span> <span>==</span> fy<span>[</span>j<span>]</span><span>)</span> <span>{<!-- --></span>
+                st<span>[</span>x1<span>]</span><span>[</span>y1<span>]</span> <span>=</span> i <span>+</span> <span>1</span><span>,</span> st<span>[</span>x2<span>]</span><span>[</span>y2<span>]</span> <span>=</span> i <span>+</span> <span>1</span><span>;</span>
+            <span>}</span>
+        <span>}</span>
+    <span>}</span>
+
+    <span>bool</span> flag <span>=</span> <span>0</span><span>;</span>
+    map<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;</span> jk<span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i<span>++</span><span>)</span> <span>{<!-- --></span>
+        <span>for</span> <span>(</span><span>int</span> j <span>=</span> <span>1</span><span>;</span> j <span>&lt;=</span> m<span>;</span> j<span>++</span><span>)</span> <span>{<!-- --></span>
+            <span>if</span> <span>(</span>i <span>==</span> <span>1</span> <span>&amp;&amp;</span> j <span>==</span> m<span>)</span> <span>continue</span><span>;</span>
+            <span>if</span> <span>(</span>st<span>[</span>i<span>]</span><span>[</span>j<span>]</span> <span>==</span> <span>0</span><span>)</span>
+            <span>{<!-- --></span>
+                cout <span>&lt;&lt;</span> <span>"No"</span> <span>&lt;&lt;</span> endl<span>;</span>
+                <span>return</span><span>;</span>
+            <span>}</span>
+            jk<span>[</span>st<span>[</span>i<span>]</span><span>[</span>j<span>]</span><span>]</span><span>++</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+
+    <span>for</span> <span>(</span><span>auto</span> bb <span>:</span> jk<span>)</span> <span>{<!-- --></span>
+        <span>if</span> <span>(</span>bb<span>.</span>y <span>!=</span> <span>3</span><span>)</span> <span>{<!-- --></span>
+            cout <span>&lt;&lt;</span> <span>"No"</span> <span>&lt;&lt;</span> endl<span>;</span>
+            <span>return</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+
+    cout <span>&lt;&lt;</span> <span>"Yes"</span> <span>&lt;&lt;</span> endl<span>;</span>
+<span>}</span>
+
+<span>signed</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    ios<span>::</span><span>sync_with_stdio</span><span>(</span><span>0</span><span>)</span><span>,</span> cin<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>,</span> cout<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>;</span>
+    <span>int</span> t <span>=</span> <span>1</span><span>;</span>
+    cin <span>&gt;&gt;</span> t<span>;</span>
+    <span>while</span> <span>(</span>t<span>--</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>solve</span><span>(</span><span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+
+</code></pre>
+<h3><a></a>Problem F. 小球进洞：平面版（几何）</h3>
+<ul><li>好难写 还是抄抄队友的码吧</li></ul>
+<pre><code><span><span>#</span><span>include</span> <span>&lt;bits/stdc++.h&gt;</span></span>
+<span>using</span> <span>namespace</span> std<span>;</span>
+<span><span>#</span><span>define</span> <span>ll</span> <span><span>long</span> <span>long</span></span></span>
+<span><span>#</span><span>define</span> <span>x</span> <span>first</span></span>
+<span><span>#</span><span>define</span> <span>y</span> <span>second</span></span>
+<span>typedef</span> pair<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;</span> pii<span>;</span>
+<span>typedef</span> pair<span>&lt;</span>ll<span>,</span> ll<span>&gt;</span> pll<span>;</span>
+<span>typedef</span> pair<span>&lt;</span><span>double</span><span>,</span> <span>double</span><span>&gt;</span> pdd<span>;</span>
+<span><span>#</span><span>define</span> <span>int</span> <span><span>long</span> <span>long</span></span></span>
+
+<span>void</span> <span>solve</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    <span>long</span> <span>double</span> x<span>,</span> y<span>,</span> r<span>,</span> vx<span>,</span> vy<span>;</span>
+    <span>long</span> <span>double</span> lx<span>,</span> ly<span>,</span> rx<span>,</span> ry<span>;</span>
+
+    cin <span>&gt;&gt;</span> x <span>&gt;&gt;</span> y <span>&gt;&gt;</span> r <span>&gt;&gt;</span> vx <span>&gt;&gt;</span> vy<span>;</span>
+    cin <span>&gt;&gt;</span> lx <span>&gt;&gt;</span> ly <span>&gt;&gt;</span> rx <span>&gt;&gt;</span> ry<span>;</span>
+
+    <span>if</span> <span>(</span>vx <span>==</span> <span>0</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>vy <span>&lt;</span> <span>0</span><span>)</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span>y <span>-</span> r <span>&gt;=</span> ly<span>)</span>
+            <span>{<!-- --></span>
+                <span>if</span> <span>(</span>lx <span>&lt;=</span> x <span>-</span> r <span>&amp;&amp;</span> x <span>-</span> r <span>&lt;=</span> rx<span>)</span>
+                <span>{<!-- --></span>
+                    <span>if</span> <span>(</span>lx <span>&lt;=</span> x <span>+</span> r <span>&amp;&amp;</span> x <span>+</span> r <span>&lt;=</span> rx<span>)</span>
+                    <span>{<!-- --></span>
+                        <span>if</span> <span>(</span>ry <span>-</span> ly <span>&gt;=</span> <span>2</span> <span>*</span> r<span>)</span>
+                        <span>{<!-- --></span>
+                            cout <span>&lt;&lt;</span> <span>"Yes"</span> <span>&lt;&lt;</span> endl<span>;</span>
+                            <span>return</span><span>;</span>
+                        <span>}</span>
+                    <span>}</span>
+                <span>}</span>
+            <span>}</span>
+        <span>}</span>
+        <span>else</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span>y <span>+</span> r <span>&lt;=</span> ry<span>)</span>
+            <span>{<!-- --></span>
+                <span>if</span> <span>(</span>lx <span>&lt;=</span> x <span>-</span> r <span>&amp;&amp;</span> x <span>-</span> r <span>&lt;=</span> rx<span>)</span>
+                <span>{<!-- --></span>
+                    <span>if</span> <span>(</span>lx <span>&lt;=</span> x <span>+</span> r <span>&amp;&amp;</span> x <span>+</span> r <span>&lt;=</span> rx<span>)</span>
+                    <span>{<!-- --></span>
+                        <span>if</span> <span>(</span>ry <span>-</span> ly <span>&gt;=</span> <span>2</span> <span>*</span> r<span>)</span>
+                        <span>{<!-- --></span>
+                            cout <span>&lt;&lt;</span> <span>"Yes"</span> <span>&lt;&lt;</span> endl<span>;</span>
+                            <span>return</span><span>;</span>
+                        <span>}</span>
+                    <span>}</span>
+                <span>}</span>
+            <span>}</span>
+        <span>}</span>
+        cout <span>&lt;&lt;</span> <span>"No"</span> <span>&lt;&lt;</span> endl<span>;</span>
+        <span>return</span><span>;</span>
+    <span>}</span>
+
+    <span>if</span> <span>(</span>vy <span>==</span> <span>0</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>vx <span>&gt;</span> <span>0</span><span>)</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span>x <span>+</span> r <span>&lt;=</span> rx<span>)</span>
+            <span>{<!-- --></span>
+                <span>if</span> <span>(</span>ly <span>&lt;=</span> y <span>-</span> r <span>&amp;&amp;</span> y <span>-</span> r <span>&lt;=</span> ry<span>)</span>
+                <span>{<!-- --></span>
+                    <span>if</span> <span>(</span>ly <span>&lt;=</span> y <span>+</span> r <span>&amp;&amp;</span> y <span>+</span> r <span>&lt;=</span> ry<span>)</span>
+                    <span>{<!-- --></span>
+                        <span>if</span> <span>(</span>rx <span>-</span> lx <span>&gt;=</span> <span>2</span> <span>*</span> r<span>)</span>
+                        <span>{<!-- --></span>
+                            cout <span>&lt;&lt;</span> <span>"Yes"</span> <span>&lt;&lt;</span> endl<span>;</span>
+                            <span>return</span><span>;</span>
+                        <span>}</span>
+                    <span>}</span>
+                <span>}</span>
+            <span>}</span>
+        <span>}</span>
+        <span>else</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span>x <span>-</span> r <span>&gt;=</span> lx<span>)</span>
+            <span>{<!-- --></span>
+                <span>if</span> <span>(</span>ly <span>&lt;=</span> y <span>-</span> r <span>&amp;&amp;</span> y <span>-</span> r <span>&lt;=</span> ry<span>)</span>
+                <span>{<!-- --></span>
+                    <span>if</span> <span>(</span>ly <span>&lt;=</span> y <span>+</span> r <span>&amp;&amp;</span> y <span>+</span> r <span>&lt;=</span> ry<span>)</span>
+                    <span>{<!-- --></span>
+                        <span>if</span> <span>(</span>rx <span>-</span> lx <span>&gt;=</span> <span>2</span> <span>*</span> r<span>)</span>
+                        <span>{<!-- --></span>
+                            cout <span>&lt;&lt;</span> <span>"Yes"</span> <span>&lt;&lt;</span> endl<span>;</span>
+                            <span>return</span><span>;</span>
+                        <span>}</span>
+                    <span>}</span>
+                <span>}</span>
+            <span>}</span>
+        <span>}</span>
+        cout <span>&lt;&lt;</span> <span>"No"</span> <span>&lt;&lt;</span> endl<span>;</span>
+        <span>return</span><span>;</span>
+    <span>}</span>
+
+    pair<span>&lt;</span><span>long</span> <span>double</span><span>,</span> <span>long</span> <span>double</span><span>&gt;</span> o1<span>,</span> o2<span>,</span> o3<span>,</span> o4<span>;</span>
+    o1<span>.</span>x <span>=</span> lx <span>+</span> r<span>;</span>
+    o1<span>.</span>y <span>=</span> vy <span>*</span> <span>(</span>o1<span>.</span>x <span>-</span> x<span>)</span> <span>/</span> vx <span>+</span> y<span>;</span>
+
+    o3<span>.</span>x <span>=</span> rx <span>-</span> r<span>;</span>
+    o3<span>.</span>y <span>=</span> vy <span>*</span> <span>(</span>o3<span>.</span>x <span>-</span> x<span>)</span> <span>/</span> vx <span>+</span> y<span>;</span>
+
+    o2<span>.</span>y <span>=</span> ry <span>-</span> r<span>;</span>
+    o2<span>.</span>x <span>=</span> vx <span>*</span> <span>(</span>o2<span>.</span>y <span>-</span> y<span>)</span> <span>/</span> vy <span>+</span> x<span>;</span>
+
+    o4<span>.</span>y <span>=</span> ly <span>+</span> r<span>;</span>
+    o4<span>.</span>x <span>=</span> vx <span>*</span> <span>(</span>o4<span>.</span>y <span>-</span> y<span>)</span> <span>/</span> vy <span>+</span> x<span>;</span>
+
+    <span>bool</span> s1 <span>=</span> <span>1</span><span>,</span> s2 <span>=</span> <span>1</span><span>,</span> s3 <span>=</span> <span>1</span><span>,</span> s4 <span>=</span> <span>1</span><span>;</span>
+
+    <span>if</span> <span>(</span>vx <span>&gt;</span> <span>0</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>o1<span>.</span>x <span>&lt;</span> x<span>)</span> s1 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o2<span>.</span>x <span>&lt;</span> x<span>)</span> s2 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o3<span>.</span>x <span>&lt;</span> x<span>)</span> s3 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o4<span>.</span>x <span>&lt;</span> x<span>)</span> s4 <span>=</span> <span>0</span><span>;</span>
+    <span>}</span>
+    <span>else</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>o1<span>.</span>x <span>&gt;</span> x<span>)</span> s1 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o2<span>.</span>x <span>&gt;</span> x<span>)</span> s2 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o3<span>.</span>x <span>&gt;</span> x<span>)</span> s3 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o4<span>.</span>x <span>&gt;</span> x<span>)</span> s4 <span>=</span> <span>0</span><span>;</span>
+    <span>}</span>
+
+    <span>if</span> <span>(</span>vy <span>&gt;</span> <span>0</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>o1<span>.</span>y <span>&lt;</span> y<span>)</span> s1 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o2<span>.</span>y <span>&lt;</span> y<span>)</span> s2 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o3<span>.</span>y <span>&lt;</span> y<span>)</span> s3 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o4<span>.</span>y <span>&lt;</span> y<span>)</span> s4 <span>=</span> <span>0</span><span>;</span>
+    <span>}</span>
+    <span>else</span>
+    <span>{<!-- --></span>
+        <span>if</span> <span>(</span>o1<span>.</span>y <span>&gt;</span> y<span>)</span> s1 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o2<span>.</span>y <span>&gt;</span> y<span>)</span> s2 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o3<span>.</span>y <span>&gt;</span> y<span>)</span> s3 <span>=</span> <span>0</span><span>;</span>
+        <span>if</span> <span>(</span>o4<span>.</span>y <span>&gt;</span> y<span>)</span> s4 <span>=</span> <span>0</span><span>;</span>
+    <span>}</span>
+
+    <span>if</span> <span>(</span>o1<span>.</span>x <span>+</span> r <span>&gt;</span> rx<span>)</span> s1 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o2<span>.</span>y <span>-</span> r <span>&lt;</span> ly<span>)</span> s2 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o3<span>.</span>x <span>-</span> r <span>&lt;</span> lx<span>)</span> s3 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o4<span>.</span>y <span>+</span> r <span>&gt;</span> ry<span>)</span> s4 <span>=</span> <span>0</span><span>;</span>
+
+    <span>if</span> <span>(</span>o1<span>.</span>x <span>-</span> r <span>&lt;</span> lx <span>||</span> o1<span>.</span>x <span>+</span> r <span>&gt;</span> rx<span>)</span> s1 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o1<span>.</span>y <span>-</span> r <span>&lt;</span> ly <span>||</span> o1<span>.</span>y <span>+</span> r <span>&gt;</span> ry<span>)</span> s1 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o2<span>.</span>x <span>-</span> r <span>&lt;</span> lx <span>||</span> o2<span>.</span>x <span>+</span> r <span>&gt;</span> rx<span>)</span> s2 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o2<span>.</span>y <span>-</span> r <span>&lt;</span> ly <span>||</span> o2<span>.</span>y <span>+</span> r <span>&gt;</span> ry<span>)</span> s2 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o3<span>.</span>x <span>-</span> r <span>&lt;</span> lx <span>||</span> o3<span>.</span>x <span>+</span> r <span>&gt;</span> rx<span>)</span> s3 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o3<span>.</span>y <span>-</span> r <span>&lt;</span> ly <span>||</span> o3<span>.</span>y <span>+</span> r <span>&gt;</span> ry<span>)</span> s3 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o4<span>.</span>x <span>-</span> r <span>&lt;</span> lx <span>||</span> o4<span>.</span>x <span>+</span> r <span>&gt;</span> rx<span>)</span> s4 <span>=</span> <span>0</span><span>;</span>
+    <span>if</span> <span>(</span>o4<span>.</span>y <span>-</span> r <span>&lt;</span> ly <span>||</span> o4<span>.</span>y <span>+</span> r <span>&gt;</span> ry<span>)</span> s4 <span>=</span> <span>0</span><span>;</span>
+
+    <span>if</span> <span>(</span>s1 <span>||</span> s2 <span>||</span> s3 <span>||</span> s4<span>)</span> <span>{<!-- --></span>
+        cout <span>&lt;&lt;</span> <span>"Yes"</span> <span>&lt;&lt;</span> endl<span>;</span>
+        <span>return</span><span>;</span>
+    <span>}</span>
+
+    cout <span>&lt;&lt;</span> <span>"No"</span> <span>&lt;&lt;</span> endl<span>;</span>
+<span>}</span>
+
+<span>signed</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    ios<span>::</span><span>sync_with_stdio</span><span>(</span><span>0</span><span>)</span><span>,</span> cin<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>,</span> cout<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>;</span>
+    <span>int</span> t <span>=</span> <span>1</span><span>;</span>
+    cin <span>&gt;&gt;</span> t<span>;</span>
+    <span>while</span> <span>(</span>t<span>--</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>solve</span><span>(</span><span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+
+</code></pre>
+<h3><a></a>Problem G. 函数查询（二分+字典树）</h3>
+<ul><li>思路参考官方题解</li></ul>
+<pre><code><span><span>#</span><span>include</span> <span>&lt;bits/stdc++.h&gt;</span></span>
+
+<span>using</span> <span>namespace</span> std<span>;</span>
+
+<span>// #define int long long</span>
+
+<span>typedef</span> pair<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;</span> PII<span>;</span>
+<span>const</span> <span>int</span> INF <span>=</span> <span>1e9</span><span>;</span>
+
+<span>struct</span> <span>Trie</span>
+<span>{<!-- --></span>
+	<span>// 输入s[i]后build() 根结点为1</span>
+	<span>const</span> <span>static</span> <span>int</span> ALPHABET <span>=</span> <span>2</span><span>;</span>
+    <span>const</span> <span>static</span> <span>int</span> N <span>=</span> <span>9e6</span> <span>+</span> <span>5</span><span>;</span>
+	<span>struct</span> <span>Node</span>
+	<span>{<!-- --></span>
+        <span>int</span> maxx <span>=</span> <span>-</span>INF<span>,</span> minn <span>=</span> INF<span>;</span>
+        <span>int</span> next<span>[</span><span>2</span><span>]</span><span>;</span> <span>// 子结点</span>
+    <span>}</span> tr<span>[</span>N<span>]</span><span>;</span>
+	<span>int</span> n<span>,</span> cnt<span>;</span>
+	vector<span>&lt;</span>string<span>&gt;</span> s<span>;</span> <span>// 单词集合</span>
+	<span>Trie</span><span>(</span><span>int</span> n<span>)</span> <span>:</span> <span>n</span><span>(</span>n<span>)</span><span>,</span> <span>s</span><span>(</span>n <span>+</span> <span>1</span><span>)</span><span>,</span> <span>cnt</span><span>(</span><span>1</span><span>)</span>
+	<span>{<!-- --></span>
+		<span>init</span><span>(</span><span>)</span><span>;</span>
+	<span>}</span>
+
+	<span>void</span> <span>init</span><span>(</span><span>)</span>
+	<span>{<!-- --></span>
+		<span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>0</span><span>;</span> i <span>&lt;</span> ALPHABET<span>;</span> i <span>++</span> <span>)</span> tr<span>[</span><span>0</span><span>]</span><span>.</span>next<span>[</span>i<span>]</span> <span>=</span> <span>1</span><span>;</span>
+    <span>}</span>
+    <span>void</span> <span>insert</span><span>(</span><span>int</span> idx<span>,</span> string <span>&amp;</span>s<span>)</span>
+	<span>{<!-- --></span>
+        <span>int</span> p <span>=</span> <span>1</span><span>;</span>
+        <span>for</span> <span>(</span><span>auto</span> c <span>:</span> s<span>)</span>
+		<span>{<!-- --></span>
+		    tr<span>[</span>p<span>]</span><span>.</span>maxx <span>=</span> <span>max</span><span>(</span>tr<span>[</span>p<span>]</span><span>.</span>maxx<span>,</span> idx<span>)</span><span>;</span>
+		    tr<span>[</span>p<span>]</span><span>.</span>minn <span>=</span> <span>min</span><span>(</span>tr<span>[</span>p<span>]</span><span>.</span>minn<span>,</span> idx<span>)</span><span>;</span>
+            <span>int</span> x <span>=</span> c <span>-</span> <span>'0'</span><span>;</span>
+            <span>if</span> <span>(</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>x<span>]</span> <span>==</span> <span>0</span><span>)</span> tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>x<span>]</span> <span>=</span> <span>++</span> cnt<span>;</span>
+            p <span>=</span> tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>x<span>]</span><span>;</span>
+        <span>}</span>
+		tr<span>[</span>p<span>]</span><span>.</span>maxx <span>=</span> <span>max</span><span>(</span>tr<span>[</span>p<span>]</span><span>.</span>maxx<span>,</span> idx<span>)</span><span>;</span>
+		tr<span>[</span>p<span>]</span><span>.</span>minn <span>=</span> <span>min</span><span>(</span>tr<span>[</span>p<span>]</span><span>.</span>minn<span>,</span> idx<span>)</span><span>;</span>
+    <span>}</span>
+	<span>void</span> <span>build</span><span>(</span><span>)</span>
+	<span>{<!-- --></span>
+		<span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span> <span>insert</span><span>(</span>i<span>,</span> s<span>[</span>i<span>]</span><span>)</span><span>;</span>
+	<span>}</span>
+    PII <span>find_bd</span><span>(</span><span>int</span> a<span>,</span> <span>int</span> b<span>,</span> <span>int</span> op<span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> mx <span>=</span> <span>-</span>INF<span>,</span> mn <span>=</span> INF<span>;</span>
+        <span>int</span> p <span>=</span> <span>1</span><span>,</span> t<span>;</span>
+        <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>30</span><span>;</span> i <span>&gt;=</span> <span>0</span><span>;</span> i <span>--</span> <span>)</span>
+        <span>{<!-- --></span>
+            <span>int</span> ab <span>=</span> <span>(</span><span>(</span>a <span>&gt;&gt;</span> i<span>)</span> <span>&amp;</span> <span>1</span><span>)</span><span>;</span>
+            <span>int</span> bb <span>=</span> <span>(</span><span>(</span>b <span>&gt;&gt;</span> i<span>)</span> <span>&amp;</span> <span>1</span><span>)</span><span>;</span>
+            t <span>=</span> ab <span>^</span> bb<span>;</span>
+            <span>if</span> <span>(</span>op <span>==</span> <span>1</span> <span>&amp;&amp;</span> bb <span>==</span> <span>0</span><span>)</span> mx <span>=</span> <span>max</span><span>(</span>mx<span>,</span> tr<span>[</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t <span>^</span> <span>1</span><span>]</span><span>]</span><span>.</span>maxx<span>)</span><span>,</span> mn <span>=</span> <span>min</span><span>(</span>mn<span>,</span> tr<span>[</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t <span>^</span> <span>1</span><span>]</span><span>]</span><span>.</span>minn<span>)</span><span>;</span>
+            <span>else</span> <span>if</span> <span>(</span>op <span>==</span> <span>2</span> <span>&amp;&amp;</span> bb <span>==</span> <span>1</span><span>)</span> mx <span>=</span> <span>max</span><span>(</span>mx<span>,</span> tr<span>[</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t <span>^</span> <span>1</span><span>]</span><span>]</span><span>.</span>maxx<span>)</span><span>,</span> mn <span>=</span> <span>min</span><span>(</span>mn<span>,</span> tr<span>[</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t <span>^</span> <span>1</span><span>]</span><span>]</span><span>.</span>minn<span>)</span><span>;</span>
+            <span>if</span> <span>(</span><span>!</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t<span>]</span><span>)</span>
+            <span>{<!-- --></span>
+                p <span>=</span> tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t<span>]</span><span>;</span>
+                <span>break</span><span>;</span>
+            <span>}</span>
+            <span>if</span> <span>(</span>i<span>)</span> p <span>=</span> tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t<span>]</span><span>;</span>
+        <span>}</span>
+        <span>if</span> <span>(</span>p<span>)</span> mx <span>=</span> <span>max</span><span>(</span>mx<span>,</span> tr<span>[</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t<span>]</span><span>]</span><span>.</span>maxx<span>)</span><span>,</span> mn <span>=</span> <span>min</span><span>(</span>mn<span>,</span> tr<span>[</span>tr<span>[</span>p<span>]</span><span>.</span>next<span>[</span>t<span>]</span><span>]</span><span>.</span>minn<span>)</span><span>;</span>
+        <span>return</span> <span>make_pair</span><span>(</span>mn<span>,</span> mx<span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span><span>;</span>
+
+<span>void</span> <span>solve</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    <span>int</span> n<span>,</span> q<span>;</span> cin <span>&gt;&gt;</span> n <span>&gt;&gt;</span> q<span>;</span>
+    Trie <span>trie</span><span>(</span>n<span>)</span><span>;</span>
+    vector<span>&lt;</span><span>int</span><span>&gt;</span> <span>x</span><span>(</span>n <span>+</span> <span>1</span><span>)</span><span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+    <span>{<!-- --></span>
+        cin <span>&gt;&gt;</span> x<span>[</span>i<span>]</span><span>;</span>
+        <span>for</span> <span>(</span><span>int</span> j <span>=</span> <span>30</span><span>;</span> j <span>&gt;=</span> <span>0</span><span>;</span> j <span>--</span> <span>)</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span><span>(</span>x<span>[</span>i<span>]</span> <span>&gt;&gt;</span> j<span>)</span> <span>&amp;</span> <span>1</span><span>)</span> trie<span>.</span>s<span>[</span>i<span>]</span> <span>+=</span> <span>'1'</span><span>;</span>
+            <span>else</span> trie<span>.</span>s<span>[</span>i<span>]</span> <span>+=</span> <span>'0'</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+    trie<span>.</span><span>build</span><span>(</span><span>)</span><span>;</span>
+
+    <span>while</span> <span>(</span>q <span>--</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> a<span>,</span> b<span>;</span> cin <span>&gt;&gt;</span> a <span>&gt;&gt;</span> b<span>;</span>
+
+        <span>auto</span> cal <span>=</span> <span>[</span><span>&amp;</span><span>]</span><span>(</span><span>int</span> x<span>)</span>
+        <span>{<!-- --></span>
+            <span>return</span> <span>(</span>a <span>^</span> x<span>)</span> <span>-</span> b<span>;</span>
+        <span>}</span><span>;</span>
+
+        PII border_max <span>=</span> trie<span>.</span><span>find_bd</span><span>(</span>a<span>,</span> b<span>,</span> <span>1</span><span>)</span><span>;</span>
+        PII border_min <span>=</span> trie<span>.</span><span>find_bd</span><span>(</span>a<span>,</span> b<span>,</span> <span>2</span><span>)</span><span>;</span>
+
+        <span>if</span> <span>(</span>border_min<span>.</span>first <span>&lt;=</span> border_max<span>.</span>second<span>)</span>
+        <span>{<!-- --></span>
+            <span>int</span> l <span>=</span> border_min<span>.</span>first<span>,</span> r <span>=</span> border_max<span>.</span>second<span>;</span>
+            <span>while</span> <span>(</span>l <span>&lt;</span> r<span>)</span>
+            <span>{<!-- --></span>
+                <span>int</span> mid <span>=</span> l <span>+</span> r <span>&gt;&gt;</span> <span>1</span><span>;</span>
+                <span>if</span> <span>(</span><span>cal</span><span>(</span>x<span>[</span>mid<span>]</span><span>)</span> <span>&gt;=</span> <span>0</span><span>)</span> r <span>=</span> mid<span>;</span>
+                <span>else</span> l <span>=</span> mid <span>+</span> <span>1</span><span>;</span>
+            <span>}</span>
+            cout <span>&lt;&lt;</span> <span>(</span>r <span>==</span> <span>1</span> <span>?</span> <span>1</span> <span>:</span> r <span>-</span> <span>1</span><span>)</span> <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+        <span>}</span>
+        <span>else</span> <span>if</span> <span>(</span>border_max<span>.</span>first <span>&lt;=</span> border_min<span>.</span>second<span>)</span>
+        <span>{<!-- --></span>
+            <span>int</span> l <span>=</span> border_max<span>.</span>first<span>,</span> r <span>=</span> border_min<span>.</span>second<span>;</span>
+            <span>while</span> <span>(</span>l <span>&lt;</span> r<span>)</span>
+            <span>{<!-- --></span>
+                <span>int</span> mid <span>=</span> l <span>+</span> r <span>&gt;&gt;</span> <span>1</span><span>;</span>
+                <span>if</span> <span>(</span><span>cal</span><span>(</span>x<span>[</span>mid<span>]</span><span>)</span> <span>&lt;=</span> <span>0</span><span>)</span> r <span>=</span> mid<span>;</span>
+                <span>else</span> l <span>=</span> mid <span>+</span> <span>1</span><span>;</span>
+            <span>}</span>
+            cout <span>&lt;&lt;</span> <span>(</span>r <span>==</span> <span>1</span> <span>?</span> <span>1</span> <span>:</span> r <span>-</span> <span>1</span><span>)</span> <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+        <span>}</span>
+        <span>else</span> cout <span>&lt;&lt;</span> <span>-</span><span>1</span> <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+
+<span>signed</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    ios<span>::</span><span>sync_with_stdio</span><span>(</span><span>false</span><span>)</span><span>;</span>
+    cin<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>,</span> cout<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>;</span>
+    
+    <span>int</span> t <span>=</span> <span>1</span><span>;</span>
+    <span>// cin &gt;&gt; t;</span>
+    <span>while</span> <span>(</span>t <span>--</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>solve</span><span>(</span><span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+</code></pre>
+<h3><a></a>Problem H. GG 和 YY 的石子游戏（签到）</h3>
+<pre><code><span><span>#</span><span>include</span><span>&lt;bits/stdc++.h&gt;</span></span>
+<span>using</span> <span>namespace</span> std<span>;</span>
+<span>int</span> t<span>,</span>m<span>,</span>ans<span>;</span>
+<span>long</span> <span>long</span> n<span>,</span>a<span>;</span>
+<span>int</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+	
+	<span>scanf</span><span>(</span><span>"%d"</span><span>,</span><span>&amp;</span>t<span>)</span><span>;</span>
+	<span>for</span><span>(</span><span>int</span> i<span>=</span><span>1</span><span>;</span>i<span>&lt;=</span>t<span>;</span>i<span>++</span><span>)</span>
+	<span>{<!-- --></span>
+		cin<span>&gt;&gt;</span>n<span>;</span>
+		ans<span>=</span><span>0</span><span>;</span>
+		<span>if</span><span>(</span>n<span>%</span><span>3</span><span>==</span><span>0</span><span>)</span><span>{<!-- --></span>
+			ans<span>=</span><span>1</span><span>;</span>
+		<span>}</span>
+			a<span>=</span><span>(</span>n<span>/</span><span>3</span><span>)</span><span>+</span>n<span>%</span><span>3</span><span>;</span>
+		
+		cout<span>&lt;&lt;</span>ans<span>&lt;&lt;</span><span>" "</span><span>&lt;&lt;</span>a<span>&lt;&lt;</span><span>"\n"</span><span>;</span>
+	<span>}</span>
+	<span>return</span> <span>0</span><span>;</span>
+<span>}</span>
+</code></pre>
+<h3><a></a>Problem L. 毛肚下清汤？（签到）</h3>
+<pre><code><span><span>#</span><span>include</span> <span>&lt;bits/stdc++.h&gt;</span></span>
+
+<span>using</span> <span>namespace</span> std<span>;</span>
+
+<span><span>#</span><span>define</span> <span>int</span> <span><span>long</span> <span>long</span></span></span>
+
+<span>typedef</span> pair<span>&lt;</span><span>int</span><span>,</span> <span>int</span><span>&gt;</span> PII<span>;</span>
+
+<span>void</span> <span>solve</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    <span>int</span> n<span>;</span> cin <span>&gt;&gt;</span> n<span>;</span>
+    priority_queue<span>&lt;</span>PII<span>,</span> vector<span>&lt;</span>PII<span>&gt;</span><span>,</span> greater<span>&lt;</span>PII<span>&gt;&gt;</span> red<span>,</span> green<span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> a<span>,</span> b<span>,</span> c<span>,</span> d<span>;</span> cin <span>&gt;&gt;</span> a <span>&gt;&gt;</span> b <span>&gt;&gt;</span> c <span>&gt;&gt;</span> d<span>;</span>
+        <span>if</span> <span>(</span>c <span>==</span> <span>0</span> <span>&amp;&amp;</span> d <span>==</span> <span>0</span><span>)</span> <span>continue</span><span>;</span>
+        <span>else</span> <span>if</span> <span>(</span>c <span>==</span> <span>1</span> <span>&amp;&amp;</span> d <span>==</span> <span>0</span><span>)</span> red<span>.</span><span>push</span><span>(</span><span>{<!-- --></span>a<span>,</span> i<span>}</span><span>)</span><span>;</span>
+        <span>else</span> <span>if</span> <span>(</span>c <span>==</span> <span>0</span> <span>&amp;&amp;</span> d <span>==</span> <span>1</span><span>)</span> green<span>.</span><span>push</span><span>(</span><span>{<!-- --></span>b<span>,</span> i<span>}</span><span>)</span><span>;</span>
+        <span>else</span>
+        <span>{<!-- --></span>
+            <span>if</span> <span>(</span>a <span>&gt;</span> b<span>)</span> green<span>.</span><span>push</span><span>(</span><span>{<!-- --></span>b<span>,</span> i<span>}</span><span>)</span><span>;</span>
+            <span>else</span> red<span>.</span><span>push</span><span>(</span><span>{<!-- --></span>a<span>,</span> i<span>}</span><span>)</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+    cout <span>&lt;&lt;</span> red<span>.</span><span>size</span><span>(</span><span>)</span> <span>&lt;&lt;</span> <span>' '</span><span>;</span>
+    <span>while</span> <span>(</span>red<span>.</span><span>size</span><span>(</span><span>)</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>auto</span> t <span>=</span> red<span>.</span><span>top</span><span>(</span><span>)</span><span>;</span>
+        red<span>.</span><span>pop</span><span>(</span><span>)</span><span>;</span>
+        cout <span>&lt;&lt;</span> t<span>.</span>second <span>&lt;&lt;</span> <span>' '</span><span>;</span>
+    <span>}</span>
+    cout <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+    cout <span>&lt;&lt;</span> green<span>.</span><span>size</span><span>(</span><span>)</span> <span>&lt;&lt;</span> <span>' '</span><span>;</span>
+    <span>while</span> <span>(</span>green<span>.</span><span>size</span><span>(</span><span>)</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>auto</span> t <span>=</span> green<span>.</span><span>top</span><span>(</span><span>)</span><span>;</span>
+        green<span>.</span><span>pop</span><span>(</span><span>)</span><span>;</span>
+        cout <span>&lt;&lt;</span> t<span>.</span>second <span>&lt;&lt;</span> <span>' '</span><span>;</span>
+    <span>}</span>
+    cout <span>&lt;&lt;</span> <span>'\n'</span><span>;</span>
+<span>}</span>
+
+<span>signed</span> <span>main</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    ios<span>::</span><span>sync_with_stdio</span><span>(</span><span>false</span><span>)</span><span>;</span>
+    cin<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>,</span> cout<span>.</span><span>tie</span><span>(</span><span>0</span><span>)</span><span>;</span>
+    
+    <span>int</span> t <span>=</span> <span>1</span><span>;</span>
+    <span>// cin &gt;&gt; t;</span>
+    <span>while</span> <span>(</span>t <span>--</span> <span>)</span>
+    <span>{<!-- --></span>
+        <span>solve</span><span>(</span><span>)</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+</code></pre>
+</div>
+</main>
+</body>
+</html>

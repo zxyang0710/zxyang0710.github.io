@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>【图论】判环问题 · zxyang</title>
+<link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/article.css">
+
+</head>
+<body>
+<main class="reading">
+<a href="../">← 返回 Blog</a>
+<h1>【图论】判环问题</h1>
+<time datetime="2023-10-02T22:20:19+08:00">2023-10-02</time>
+<div class="prose">
+
+<p>（未更新完、做到相关题再更新相关部分</p>
+<p></p>
+<div>
+<h4>文章目录</h4>
+<ul><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/133500922#_3">无向图判断有无环并输出环上点</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/133500922#_43">无向图判断连通分量中的多余边（即删去哪些边可以变成极大连通分量）</a></li><li><a href="https://blog.csdn.net/dhxbshbdjzxy/article/details/133500922#_69">有向图找最小/大环</a></li></ul>
+</div>
+<p></p>
+<h2><a></a>无向图判断有无环并输出环上点</h2>
+<p>例题：<a href="https://codeforces.com/contest/1873/problem/H">H. Mad City</a></p>
+<p>利用变种拓扑排序，先把度为1的点存入队中，每次取出队头，遍历邻接点，再将该条边删除也就是将邻接点度数减一，直至队空，然后所有度数大于1的点都是在环上的点，输出即可</p>
+<p><strong>code</strong></p>
+<pre><code><span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>0</span><span>;</span> i <span>&lt;</span> n<span>;</span> i <span>++</span> <span>)</span>
+<span>{<!-- --></span>
+    <span>int</span> x<span>,</span> y<span>;</span>
+    cin <span>&gt;&gt;</span> x <span>&gt;&gt;</span> y<span>;</span>
+    <span>add</span><span>(</span>x<span>,</span> y<span>)</span><span>,</span> <span>add</span><span>(</span>y<span>,</span> x<span>)</span><span>;</span>
+
+    ind<span>[</span>x<span>]</span> <span>++</span><span>,</span> ind<span>[</span>y<span>]</span> <span>++</span> <span>;</span>
+<span>}</span>
+    
+function<span>&lt;</span><span>void</span><span>(</span><span>)</span><span>&gt;</span> topsort <span>=</span> <span>[</span><span>&amp;</span><span>]</span><span>(</span><span>)</span>
+<span>{<!-- --></span>
+    queue<span>&lt;</span><span>int</span><span>&gt;</span> q<span>;</span>
+    <span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+        <span>if</span> <span>(</span>ind<span>[</span>i<span>]</span> <span>==</span> <span>1</span><span>)</span> q<span>.</span><span>push</span><span>(</span>i<span>)</span><span>;</span>
+
+    <span>while</span> <span>(</span>q<span>.</span><span>size</span><span>(</span><span>)</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> u <span>=</span> q<span>.</span><span>front</span><span>(</span><span>)</span><span>;</span>
+        q<span>.</span><span>pop</span><span>(</span><span>)</span><span>;</span>
+
+        <span>for</span> <span>(</span><span>int</span> i <span>=</span> h<span>[</span>u<span>]</span><span>;</span> <span>~</span>i<span>;</span> i <span>=</span> ne<span>[</span>i<span>]</span><span>)</span>
+        <span>{<!-- --></span>
+            <span>int</span> v <span>=</span> e<span>[</span>i<span>]</span><span>;</span>
+            <span>if</span> <span>(</span><span>--</span> ind<span>[</span>v<span>]</span> <span>==</span> <span>1</span><span>)</span> q<span>.</span><span>push</span><span>(</span>v<span>)</span><span>;</span>
+        <span>}</span>
+    <span>}</span>
+<span>}</span><span>;</span>
+
+<span>topsort</span><span>(</span><span>)</span><span>;</span>
+
+<span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+	<span>if</span> <span>(</span>ind<span>[</span>i<span>]</span> <span>&gt;</span> <span>1</span><span>)</span> ans <span>=</span> <span>true</span><span>;</span>
+</code></pre>
+<h2><a></a>无向图判断连通分量中的多余边（即删去哪些边可以变成极大连通分量）</h2>
+<p>利用并查集，每加一条边，判断当前这两个端点是否连通，如果不连通就把它们放到一个并查集，连通的话说明已经有别的边把这两个点连起来了，现在的这条边就是多余的，记录一下一会儿可以把这条边换掉</p>
+<pre><code><span>int</span> <span>find</span><span>(</span><span>int</span> x<span>)</span>
+<span>{<!-- --></span>
+	<span>if</span> <span>(</span>p<span>[</span>x<span>]</span> <span>!=</span> x<span>)</span> p<span>[</span>x<span>]</span> <span>=</span> <span>find</span><span>(</span>p<span>[</span>x<span>]</span><span>)</span><span>;</span>
+	<span>return</span> p<span>[</span>x<span>]</span><span>;</span>
+<span>}</span>
+<span>bool</span> <span>merge</span><span>(</span><span>int</span> x<span>,</span> <span>int</span> y<span>)</span>
+<span>{<!-- --></span>
+	<span>int</span> xp <span>=</span> <span>find</span><span>(</span>x<span>)</span><span>,</span> yp <span>=</span> <span>find</span><span>(</span>y<span>)</span><span>;</span>
+	<span>if</span> <span>(</span>xp <span>==</span> yp<span>)</span> <span>return</span> <span>false</span><span>;</span>
+	<span>else</span>
+	<span>{<!-- --></span>
+		p<span>[</span>xp<span>]</span> <span>=</span> yp<span>;</span>
+		<span>return</span> <span>true</span><span>;</span>
+	<span>}</span>
+<span>}</span><span>;</span>
+vector<span>&lt;</span>PII<span>&gt;</span> edge<span>;</span>
+<span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>0</span><span>;</span> i <span>&lt;</span> n <span>-</span> <span>1</span><span>;</span> i <span>++</span> <span>)</span>
+<span>{<!-- --></span>
+	<span>int</span> u<span>,</span> v<span>;</span>
+	cin <span>&gt;&gt;</span> u <span>&gt;&gt;</span> v<span>;</span>
+	<span>if</span> <span>(</span><span>!</span><span>merge</span><span>(</span>u<span>,</span> v<span>)</span><span>)</span> edge<span>.</span><span>push_back</span><span>(</span><span>{<!-- --></span>u<span>,</span> v<span>}</span><span>)</span><span>;</span>
+<span>}</span>
+</code></pre>
+<h2><a></a>有向图找最小/大环</h2>
+<p>利用并查集，每加一条边，判断当前这两个端点是否连通，如果不连通就更新他们的长度和父结点情况，如果这两个端点已经连通，那么加上这一条边一定能使得形成一个环，环的长度就是两个端点距离祖先结点的和再加一</p>
+<p><strong>code</strong></p>
+<pre><code><span>int</span> <span>find</span><span>(</span><span>int</span> x<span>)</span>
+<span>{<!-- --></span>
+    <span>if</span> <span>(</span>x <span>!=</span> fa<span>[</span>x<span>]</span><span>)</span>
+    <span>{<!-- --></span>
+        <span>int</span> last <span>=</span> fa<span>[</span>x<span>]</span><span>;</span>
+        fa<span>[</span>x<span>]</span> <span>=</span> <span>find</span><span>(</span>fa<span>[</span>x<span>]</span><span>)</span><span>;</span>
+        dist<span>[</span>x<span>]</span> <span>+=</span> dist<span>[</span>last<span>]</span><span>;</span>
+    <span>}</span>
+    <span>return</span> fa<span>[</span>x<span>]</span><span>;</span>
+<span>}</span>
+
+<span>void</span> <span>func</span><span>(</span><span>int</span> a<span>,</span> <span>int</span> b<span>)</span>
+<span>{<!-- --></span>
+    <span>int</span> aa <span>=</span> <span>find</span><span>(</span>a<span>)</span><span>,</span> bb <span>=</span> <span>find</span><span>(</span>b<span>)</span><span>;</span>
+
+    <span>if</span> <span>(</span>aa <span>==</span> bb<span>)</span> ans <span>=</span> <span>min</span><span>(</span>ans<span>,</span> dist<span>[</span>a<span>]</span> <span>+</span> dist<span>[</span>b<span>]</span> <span>+</span> <span>1</span><span>)</span><span>;</span>
+    <span>else</span>
+    <span>{<!-- --></span>
+        fa<span>[</span>a<span>]</span> <span>=</span> bb<span>;</span>
+        dist<span>[</span>a<span>]</span> <span>=</span> dist<span>[</span>b<span>]</span> <span>+</span> <span>1</span><span>;</span>
+    <span>}</span>
+<span>}</span>
+
+ans <span>=</span> <span>0x3f3f3f3f</span><span>;</span>
+<span>for</span> <span>(</span><span>int</span> i <span>=</span> <span>1</span><span>;</span> i <span>&lt;=</span> n<span>;</span> i <span>++</span> <span>)</span>
+<span>{<!-- --></span>
+    <span>int</span> x<span>;</span>
+    cin <span>&gt;&gt;</span> x<span>;</span>
+    <span>func</span><span>(</span>i<span>,</span> x<span>)</span><span>;</span>
+<span>}</span>
+</code></pre>
+</div>
+</main>
+</body>
+</html>
