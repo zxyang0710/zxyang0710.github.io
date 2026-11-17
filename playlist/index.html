@@ -1,15 +1,52 @@
 <!doctype html>
 <html lang="zh-CN">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>音乐</title>
-<style>
-body { color-scheme: dark; background: #181b28; color: #f1eef5; font: 1rem/1.7 system-ui, sans-serif; max-width: 44rem; margin: 4rem auto; padding: 0 1.25rem; }
-a { color: #c4defa; }
-</style>
-<main>
-  <a href="../">返回首页</a>
-  <h1>音乐</h1>
-  <p>音乐收藏待添加。</p>
-</main>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101923">
+  <title>Music · zxyang</title>
+  <link rel="icon" href="../img/favicon.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SimonAKing/font/font.min.css">
+  <link rel="stylesheet" href="../assets/shared/sections.css?v=2">
+  <link rel="stylesheet" href="./music.css?v=2">
+  <script type="module" src="./player.js"></script>
+  <script type="module" src="../assets/shared/blog-navigation.js"></script>
+</head>
+<body class="scene">
+  <header class="shell site-nav">
+    <a class="brand" href="../" aria-label="返回 zxyang 首页">zxyang</a>
+    <div>
+      <a href="../blog/" data-open-blog>Blog</a>
+      <a href="../playlist/" aria-current="page">Music</a>
+      <a href="../links/">Links</a>
+      <a href="../about/">About</a>
+    </div>
+  </header>
+  <main class="shell">
+  <h1>Music</h1>
+  <div class="library">
+    <section class="collection" aria-labelledby="playlists-title">
+      <h2 id="playlists-title">歌单</h2>
+      <div class="playlists" id="playlists" aria-label="选择歌单"></div>
+      <ol class="track-list" id="tracks" aria-label="曲目"></ol>
+      <noscript>请启用 JavaScript 来选择歌单和播放音乐。</noscript>
+    </section>
+    <section class="panel player" aria-labelledby="track-title">
+      <div class="record" aria-hidden="true"></div>
+      <h2 id="track-title">选择一首曲目</h2>
+      <p id="track-meta" class="muted">点击曲目即可站内播放</p>
+      <audio id="audio" controls controlslist="nodownload" preload="none" aria-label="音乐播放器" hidden></audio>
+      <div class="transport">
+        <button id="previous" type="button" disabled>上一首</button>
+        <button id="next" type="button" disabled>下一首</button>
+      </div>
+      <p id="player-status" class="muted" role="status"></p>
+      <div class="credits muted">
+        <a id="source" hidden>曲目来源</a>
+        <p>示范曲目由 Kevin MacLeod 创作，来自 Incompetech。<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
+      </div>
+    </section>
+  </div>
+  </main>
+</body>
 </html>

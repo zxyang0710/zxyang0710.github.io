@@ -15,6 +15,7 @@
   <script defer src="./assets/home/ripples.js"></script>
   <link rel="stylesheet" href="./assets/shared/loading.css">
   <script defer src="./assets/shared/loading.js"></script>
+  <script type="module" src="./assets/shared/blog-navigation.js"></script>
 </head>
 <body>
   <div class="fish-progress" aria-hidden="true"><div class="fish-progress__fill"><span class="fish-progress__fish">&#x1F41F;</span></div></div>
@@ -26,22 +27,12 @@
         <h1>zxyang</h1>
         <p>听一万种声音，但只成为自己。</p>
         <nav class="primary-nav" aria-label="网站栏目">
-          <a href="./blog/"><i class="fa-solid fa-book-open" aria-hidden="true"></i><span>Blog</span></a>
+          <a href="./blog/" data-open-blog><i class="fa-solid fa-book-open" aria-hidden="true"></i><span>Blog</span></a>
           <a href="https://github.com/zxyang0710?tab=repositories"><i class="fa-solid fa-folder-open" aria-hidden="true"></i><span>Projects</span></a>
           <a href="./playlist/"><i class="fa-solid fa-headphones" aria-hidden="true"></i><span>Music</span></a>
-          <a href="#links"><i class="fa-solid fa-link" aria-hidden="true"></i><span>Links</span></a>
-          <a href="#about"><i class="fa-solid fa-user" aria-hidden="true"></i><span>About</span></a>
+          <a href="./links/"><i class="fa-solid fa-link" aria-hidden="true"></i><span>Links</span></a>
+          <a href="./about/"><i class="fa-solid fa-user" aria-hidden="true"></i><span>About</span></a>
         </nav>
-        <section class="extra" id="links">
-          <h2>Links</h2>
-          <p>链接待添加。</p>
-          <a href="#profile">收起</a>
-        </section>
-        <section class="extra" id="about">
-          <h2>About</h2>
-          <p><a href="https://github.com/zxyang0710">zxyang on GitHub</a></p>
-          <a href="#profile">收起</a>
-        </section>
       </div>
     </header>
   </main>

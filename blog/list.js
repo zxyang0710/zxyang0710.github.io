@@ -1,6 +1,3 @@
-const tree = document.querySelector("#tree");
-const resultStatus = document.querySelector("#status");
-const list = document.querySelector("#posts");
 const collator = new Intl.Collator("zh-Hans");
 
 function element(name, text, className) {
@@ -16,7 +13,7 @@ function article(post) {
   const title = element("h2");
   if (post.localUrl) {
     const link = element("a", post.title);
-    link.href = post.localUrl;
+    link.href = new URL(post.localUrl, import.meta.url).href;
     title.append(link);
   } else {
     title.textContent = post.title;
@@ -31,10 +28,30 @@ function article(post) {
   return row;
 }
 
-async function init() {
-  const response = await fetch("./data/posts.json");
-  if (!response.ok) throw new Error("Could not read posts");
-  const posts = await response.json();
+export async function initBlog(view) {
+  const tree = view.querySelector("#tree");
+  const resultStatus = view.querySelector("#status");
+  const list = view.querySelector("#posts");
+  const sidebar = view.querySelector("#blog-sidebar");
+  const sidebarToggle = view.querySelector(".sidebar-toggle");
+  sidebarToggle.addEventListener("click", () => {
+    const open = sidebar.hidden;
+    sidebar.hidden = !open;
+    view.classList.toggle("sidebar-closed", !open);
+    sidebarToggle.setAttribute("aria-expanded", String(open));
+    sidebarToggle.setAttribute("aria-label", open ? "收起标签栏" : "展开标签栏");
+    sidebarToggle.firstElementChild.textContent = open ? "‹" : "›";
+  });
+
+  let posts;
+  try {
+    const response = await fetch(new URL("./data/posts.json", import.meta.url));
+    if (!response.ok) throw new Error("Could not read posts");
+    posts = await response.json();
+  } catch {
+    resultStatus.textContent = "文章加载失败，请刷新后重试。";
+    return;
+  }
   const categories = new Map();
   for (const post of posts) {
     if (!categories.has(post.category)) categories.set(post.category, []);
@@ -101,16 +118,3 @@ async function init() {
   }
   render(posts, "全部文章", all);
 }
-
-init().catch(() => { resultStatus.textContent = "文章加载失败，请刷新后重试。"; });
-
-const sidebar = document.querySelector("#blog-sidebar");
-const sidebarToggle = document.querySelector(".sidebar-toggle");
-sidebarToggle.addEventListener("click", () => {
-  const open = sidebar.hidden;
-  sidebar.hidden = !open;
-  sidebar.closest(".layout").classList.toggle("sidebar-closed", !open);
-  sidebarToggle.setAttribute("aria-expanded", String(open));
-  sidebarToggle.setAttribute("aria-label", open ? "收起标签栏" : "展开标签栏");
-  sidebarToggle.firstElementChild.textContent = open ? "‹" : "›";
-});

@@ -59,20 +59,6 @@ a:focus-visible { outline: 2px solid #c1ecff; outline-offset: 5px; }
 .primary-nav span { font-size: .95rem; }
 .primary-nav a:hover { color: #c1ecff; }
 
-.extra {
-  display: none;
-  margin: 16px auto 0;
-  width: min(100%, 330px);
-  padding: 12px;
-  border: 1px solid #e5f6ff55;
-  border-radius: 14px;
-  background: #152b3eea;
-}
-.extra:target { display: block; }
-.extra h2 { margin: 0; font-size: 1.18rem; font-weight: 400; }
-.extra p { margin: 6px 0; font-size: 1rem; }
-.extra a { text-decoration: underline; text-underline-offset: .2em; }
-
 .home-ripples {
   position: absolute;
   inset: 0;
